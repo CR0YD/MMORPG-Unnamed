@@ -20,11 +20,15 @@ public class Client extends Application {
 	private PlayerController playerController;
 	private AnimationTimer timer;
 	private Player player;
-	private List<WorldObstacle> tiles;
+	private List<MapObstacle> tiles;
 	private Stage stage;
 
 	private long frameCounter = 0;
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		initPlayer();
@@ -39,7 +43,7 @@ public class Client extends Application {
 		stage = primaryStage;
 		stage.setTitle("MMORPG - unnamed"); // Set the stage title
 		stage.setScene(scene); // Place the scene in the stage
-		stage.setFullScreen(true);
+		stage.setFullScreen(false);
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		stage.show();
 
@@ -47,20 +51,20 @@ public class Client extends Application {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
 			@Override
-			public void handle(KeyEvent arg0) {
-				if (arg0.getText().equalsIgnoreCase("w")) {
+			public void handle(KeyEvent event) {
+				if (event.getText().equalsIgnoreCase("w")) {
 					playerController.setPlayerInputUp(true);
 				}
-				if (arg0.getText().equalsIgnoreCase("s")) {
+				if (event.getText().equalsIgnoreCase("s")) {
 					playerController.setPlayerInputDown(true);
 				}
-				if (arg0.getText().equalsIgnoreCase("a")) {
+				if (event.getText().equalsIgnoreCase("a")) {
 					playerController.setPlayerInputLeft(true);
 				}
-				if (arg0.getText().equalsIgnoreCase("d")) {
+				if (event.getText().equalsIgnoreCase("d")) {
 					playerController.setPlayerInputRight(true);
 				}
-				if (arg0.getCode() == KeyCode.ESCAPE) {
+				if (event.getCode() == KeyCode.ESCAPE) {
 					endGame();
 				}
 			}
@@ -68,18 +72,21 @@ public class Client extends Application {
 		scene.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
 
 			@Override
-			public void handle(KeyEvent arg0) {
-				if (arg0.getText().equalsIgnoreCase("w")) {
+			public void handle(KeyEvent event) {
+				if (event.getText().equalsIgnoreCase("w")) {
 					playerController.setPlayerInputUp(false);
 				}
-				if (arg0.getText().equalsIgnoreCase("s")) {
+				if (event.getText().equalsIgnoreCase("s")) {
 					playerController.setPlayerInputDown(false);
 				}
-				if (arg0.getText().equalsIgnoreCase("a")) {
+				if (event.getText().equalsIgnoreCase("a")) {
 					playerController.setPlayerInputLeft(false);
 				}
-				if (arg0.getText().equalsIgnoreCase("d")) {
+				if (event.getText().equalsIgnoreCase("d")) {
 					playerController.setPlayerInputRight(false);
+				}
+				if (event.getText().equalsIgnoreCase("f")) {
+					playerController.playerWantsToInteract();
 				}
 			}
 		});
@@ -175,15 +182,31 @@ public class Client extends Application {
 		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 6 * 32, 32, 32));
 		animator.addFrameToAnimation("STANDARD", new Rectangle2D(2 * 32, 6 * 32, 32, 32));
 		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 6 * 32, 32, 32));
-		WorldObstacle object = new WorldObstacle(sprites, 100, 100, 32, 32, animator, true, true);
+		MapObstacle object = new MapObstacle(sprites, 100, 100, 32, 32, animator, true, true, false);
 		object.addHitbox(0, 0, 32, 32);
 		tiles.add(object);
 
 		animator = new Animator();
 		animator.addAnimation("STANDARD");
 		animator.addFrameToAnimation("STANDARD", new Rectangle2D(15 * 32, 2 * 32, 32, 32));
-		object = new WorldObstacle(sprites, 132, 100, 32, 32, animator, false, false);
-		object.addHitbox(0, 0, 32, 32);
+		object = new MapObstacle(sprites, 132, 100, 32, 32, animator, false, false, false);
+		tiles.add(object);
+
+		animator = new Animator();
+		animator.addAnimation("STANDARD");
+		animator.addFrameToAnimation("STANDARD", new Rectangle2D(0 * 32, 1 * 32, 32, 32));
+		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 1 * 32, 32, 32));
+		animator.addFrameToAnimation("STANDARD", new Rectangle2D(2 * 32, 1 * 32, 32, 32));
+		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 1 * 32, 32, 32));
+		object = new MapObstacle(sprites, 164, 100, 32, 32, animator, false, true, true);
+		object.setInteraction(new Interaction() {
+			
+			@Override
+			public void onInteraction() {
+				System.out.println("Hello World!");
+			}
+		});
+		object.addHitbox(0, 8, 32, 24);
 		tiles.add(object);
 	}
 
@@ -191,10 +214,6 @@ public class Client extends Application {
 		for (int i = 0; i < tiles.length(); i++) {
 			root.getChildren().add(tiles.get(i).getBody());
 		}
-	}
-
-	public static void main(String[] args) {
-		launch(args);
 	}
 
 	private void tick() {
@@ -207,6 +226,7 @@ public class Client extends Application {
 			playerController.checkCollision(tiles);
 			playerController.updatePlayerPosition();
 			playerController.checkPlayerStoppedMoving();
+			playerController.checkInteraction(tiles);
 		}
 		// basic animation: every tenth frame, move frame by one
 		if (frameCounter % 10 == 0) {

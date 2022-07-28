@@ -6,6 +6,7 @@ public class PlayerController {
 
 	private boolean up, down, left, right, collisionUp, collisionDown, collisionLeft, collisionRight = false;
 	private double playerX, playerY, playerSpeed;
+	private boolean wantsToInteract;
 
 	private Player player;
 	private PlayerFacingDirection currentPlayerDirection;
@@ -13,13 +14,17 @@ public class PlayerController {
 	private enum PlayerFacingDirection {
 		UP, DOWN, LEFT, RIGHT;
 	}
-
+	
 	public PlayerController(Player player, double playerSpeed) {
 		this.player = player;
 		this.playerSpeed = playerSpeed;
 		playerX = this.player.getBody().getTranslateX();
 		playerY = this.player.getBody().getTranslateY();
 		currentPlayerDirection = PlayerFacingDirection.UP;
+	}
+	
+	public void playerWantsToInteract() {
+		wantsToInteract = true;
 	}
 
 	public void setPlayerInputUp(boolean up) {
@@ -111,7 +116,7 @@ public class PlayerController {
 		playerY = player.getBody().getTranslateY();
 	}
 
-	public void checkCollision(List<WorldObstacle> obstacles) {
+	public void checkCollision(List<MapObstacle> obstacles) {
 		for (int i = 0; i < obstacles.length(); i++) {
 			if (!obstacles.get(i).hasCollision()) {
 				continue;
@@ -239,6 +244,19 @@ public class PlayerController {
 				continue;
 			}
 		}
+	}
+	
+	public void checkInteraction(List<MapObstacle> tiles) {
+		if (!wantsToInteract) {
+			return;
+		}
+		for (int i = 0; i < tiles.length(); i++) {
+			if (!tiles.get(i).isInteractable()) {
+				continue;
+			}
+			tiles.get(i).onInteraction();
+		}
+		wantsToInteract = false;
 	}
 
 }

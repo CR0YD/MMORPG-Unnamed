@@ -2,11 +2,11 @@ package testing;
 
 import javafx.scene.shape.Rectangle;
 
-public class BasicHitbox extends Rectangle {
+public class ObjectBox extends Rectangle {
 
 	public final double OFFSET_X, OFFSET_Y;
 
-	public BasicHitbox(double x, double y, double width, double height) {
+	public ObjectBox(double x, double y, double width, double height) {
 		super(0, 0, width, height);
 		setTranslateX(x);
 		setTranslateY(y);
@@ -23,4 +23,5 @@ public class BasicHitbox extends Rectangle {
 		setTranslateX(x + OFFSET_X);
 		setTranslateY(y + OFFSET_Y);
 	}
+	
 }

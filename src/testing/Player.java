@@ -2,7 +2,7 @@ package testing;
 
 import java.io.IOException;
 
-public class Player extends WorldObject {
+public class Player extends MapObject {
 
 	public PlayerHitbox hitboxUp, hitboxDown, hitboxLeft, hitboxRight;
 
@@ -46,7 +46,7 @@ public class Player extends WorldObject {
 		hitboxRight.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
-	public boolean isColliding(List<BasicHitbox> collidingObjectHitbox, CollisionDirection detecionDirection) {
+	public boolean isColliding(List<ObjectBox> collidingObjectHitbox, CollisionDirection detecionDirection) {
 		for (int i = 0; i < collidingObjectHitbox.length(); i++) {
 			// Moving the player to the nearest possible point, at which he doesn't collide
 			// with the object that his collision box detects.
@@ -110,7 +110,7 @@ public class Player extends WorldObject {
 		hitboxRight = new PlayerHitbox(x, y, width, height, CollisionDirection.Right);
 	}
 
-	public class PlayerHitbox extends BasicHitbox {
+	public class PlayerHitbox extends ObjectBox {
 
 		public final CollisionDirection DETECTION_DIRECTION;
 

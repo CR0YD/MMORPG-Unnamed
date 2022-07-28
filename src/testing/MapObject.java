@@ -7,14 +7,14 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class WorldObject {
+public class MapObject {
 
 	protected final SpriteSheet SPRITES;
 	protected ImageView body;
 	public final double WIDTH, HEIGHT;
-	private final Animator ANIMATOR;
+	protected final Animator ANIMATOR;
 
-	public WorldObject(SpriteSheet sprites, double x, double y, double width, double height, Animator animator) {
+	public MapObject(SpriteSheet sprites, double x, double y, double width, double height, Animator animator) {
 		SPRITES = sprites;
 		WIDTH = width;
 		HEIGHT = height;
