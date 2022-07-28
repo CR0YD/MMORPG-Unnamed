@@ -136,7 +136,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_LEFT");
 					currentPlayerDirection = PlayerFacingDirection.LEFT;
 				}
-				continue;
 			}
 			if (up && !down && right && !left && !collisionUp && !collisionRight) {
 				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
@@ -153,7 +152,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_RIGHT");
 					currentPlayerDirection = PlayerFacingDirection.RIGHT;
 				}
-				continue;
 			}
 			if (down && !up && left && !right && !collisionDown && !collisionLeft) {
 				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
@@ -170,7 +168,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_LEFT");
 					currentPlayerDirection = PlayerFacingDirection.LEFT;
 				}
-				continue;
 			}
 			if (down && !up && right && !left && !collisionDown && !collisionRight) {
 				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
@@ -187,7 +184,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_RIGHT");
 					currentPlayerDirection = PlayerFacingDirection.RIGHT;
 				}
-				continue;
 			}
 			if (up && !down
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
@@ -201,7 +197,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_UP");
 					currentPlayerDirection = PlayerFacingDirection.UP;
 				}
-				continue;
 			}
 			if (down && !up
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
@@ -215,7 +210,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_DOWN");
 					currentPlayerDirection = PlayerFacingDirection.DOWN;
 				}
-				continue;
 			}
 			if (left && !right && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionLeft) {
@@ -228,7 +222,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_LEFT");
 					currentPlayerDirection = PlayerFacingDirection.LEFT;
 				}
-				continue;
 			}
 			if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionRight) {
@@ -241,7 +234,6 @@ public class PlayerController {
 					player.changeAnimationTo("MOVE_RIGHT");
 					currentPlayerDirection = PlayerFacingDirection.RIGHT;
 				}
-				continue;
 			}
 		}
 	}

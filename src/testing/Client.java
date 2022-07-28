@@ -28,7 +28,7 @@ public class Client extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		initPlayer();
@@ -112,59 +112,80 @@ public class Client extends Application {
 
 	private void initPlayer() {
 		try {
-			SpriteSheet sprites = new SpriteSheet("assets/sprites/SpriteSheet.png", 32, 32);
+			SpriteSheet sprites = new SpriteSheet("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png",
+					32, 36);
 			Animator animator = new Animator();
 			animator.addAnimation("IDLE_UP");
-			animator.addFrameToAnimation("IDLE_UP", new Rectangle2D(0 * 32, 11 * 32, 32, 32));
+			animator.addFrameToAnimation("IDLE_UP", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 0 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("MOVE_UP");
-			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(1 * 32, 11 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(0 * 32, 11 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(2 * 32, 11 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(0 * 32, 11 * 32, 32, 32));
+			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(0 * sprites.COLUMN_WIDTH, 0 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 0 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(2 * sprites.COLUMN_WIDTH, 0 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_UP", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 0 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("IDLE_DOWN");
-			animator.addFrameToAnimation("IDLE_DOWN", new Rectangle2D(0 * 32, 8 * 32, 32, 32));
+			animator.addFrameToAnimation("IDLE_DOWN", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 2 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("MOVE_DOWN");
-			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(1 * 32, 8 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(0 * 32, 8 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(2 * 32, 8 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(0 * 32, 8 * 32, 32, 32));
+			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(0 * sprites.COLUMN_WIDTH, 2 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 2 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(2 * sprites.COLUMN_WIDTH, 2 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_DOWN", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 2 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("IDLE_LEFT");
-			animator.addFrameToAnimation("IDLE_LEFT", new Rectangle2D(0 * 32, 9 * 32, 32, 32));
+			animator.addFrameToAnimation("IDLE_LEFT", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 3 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("MOVE_LEFT");
-			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(1 * 32, 9 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(0 * 32, 9 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(2 * 32, 9 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(0 * 32, 9 * 32, 32, 32));
+			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(0 * sprites.COLUMN_WIDTH, 3 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 3 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(2 * sprites.COLUMN_WIDTH, 3 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_LEFT", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 3 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("IDLE_RIGHT");
-			animator.addFrameToAnimation("IDLE_RIGHT", new Rectangle2D(0 * 32, 10 * 32, 32, 32));
+			animator.addFrameToAnimation("IDLE_RIGHT", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 1 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
 			animator.addAnimation("MOVE_RIGHT");
-			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(1 * 32, 10 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(0 * 32, 10 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(2 * 32, 10 * 32, 32, 32));
-			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(0 * 32, 10 * 32, 32, 32));
-			player = new Player(sprites, 0, 0, 32, 32, animator);
+			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(0 * sprites.COLUMN_WIDTH, 1 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 1 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(2 * sprites.COLUMN_WIDTH, 1 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			animator.addFrameToAnimation("MOVE_RIGHT", new Rectangle2D(1 * sprites.COLUMN_WIDTH, 1 * sprites.ROW_HEIGHT,
+					sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+			player = new Player(sprites, 50, 50, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT, animator);
+			
+			player.addHitboxUp(2, player.getHeight() - 10, sprites.COLUMN_WIDTH - 6, 1);
+			player.addHitboxDown(2, player.getHeight(), sprites.COLUMN_WIDTH - 6, 1);
+			player.addHitboxLeft(1, player.getHeight() - 9, 1, 9);
+			player.addHitboxRight(player.getWidth() - 4, player.getHeight() - 9, 1, 9);
+
+			player.moveTo(50, 50);
+
+			playerController = new PlayerController(player, 1);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
-
-		player.addHitboxUp(5, player.getHeight() - 10, 32 - 10, 1);
-		player.addHitboxDown(5, player.getHeight(), 32 - 10, 1);
-		player.addHitboxLeft(4, player.getHeight() - 9, 1, 9);
-		player.addHitboxRight(player.getWidth() - 5, player.getHeight() - 9, 1, 9);
-
-		player.moveTo(50, 50);
-
-		playerController = new PlayerController(player, 1);
 	}
 
 	private void visualizePlayer(Group root) {
-		/*
-		 * root.getChildren().add(player.hitboxUp);
-		 * root.getChildren().add(player.hitboxDown);
-		 * root.getChildren().add(player.hitboxLeft);
-		 * root.getChildren().add(player.hitboxRight);
-		 */
+
+		root.getChildren().add(player.hitboxUp);
+		root.getChildren().add(player.hitboxDown);
+		root.getChildren().add(player.hitboxLeft);
+		root.getChildren().add(player.hitboxRight);
+
 		root.getChildren().add(player.getBody());
 	}
 
@@ -172,46 +193,53 @@ public class Client extends Application {
 		tiles = new List<>();
 		SpriteSheet sprites = null;
 		try {
-			sprites = new SpriteSheet("assets/sprites/SpriteSheet.png", 32, 32);
+			sprites = new SpriteSheet("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png", 32, 36);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		Animator animator = new Animator();
 		animator.addAnimation("STANDARD");
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(0 * 32, 6 * 32, 32, 32));
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 6 * 32, 32, 32));
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(2 * 32, 6 * 32, 32, 32));
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 6 * 32, 32, 32));
-		MapObstacle object = new MapObstacle(sprites, 100, 100, 32, 32, animator, true, true, false);
-		object.addHitbox(0, 0, 32, 32);
+		animator.addFrameToAnimation("STANDARD", new Rectangle2D(3 * sprites.COLUMN_WIDTH, 2 * sprites.ROW_HEIGHT,
+				sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT));
+		MapObstacle object = new MapObstacle(sprites, 100, 100, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT, animator, false, true, false);
+		object.addHitbox(0, 0, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT);
 		tiles.add(object);
-
-		animator = new Animator();
-		animator.addAnimation("STANDARD");
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(15 * 32, 2 * 32, 32, 32));
-		object = new MapObstacle(sprites, 132, 100, 32, 32, animator, false, false, false);
-		tiles.add(object);
-
-		animator = new Animator();
-		animator.addAnimation("STANDARD");
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(0 * 32, 1 * 32, 32, 32));
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 1 * 32, 32, 32));
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(2 * 32, 1 * 32, 32, 32));
-		animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 1 * 32, 32, 32));
-		object = new MapObstacle(sprites, 164, 100, 32, 32, animator, false, true, true);
-		object.setInteraction(new Interaction() {
-			
-			@Override
-			public void onInteraction() {
-				System.out.println("Hello World!");
-			}
-		});
-		object.addHitbox(0, 8, 32, 24);
-		tiles.add(object);
+		/*
+		 * SpriteSheet sprites = null; try { sprites = new
+		 * SpriteSheet("assets/sprites/SpriteSheet.png", 32, 32); } catch (IOException
+		 * e) { e.printStackTrace(); } Animator animator = new Animator();
+		 * animator.addAnimation("STANDARD"); animator.addFrameToAnimation("STANDARD",
+		 * new Rectangle2D(0 * 32, 6 * 32, 32, 32));
+		 * animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 6 * 32, 32,
+		 * 32)); animator.addFrameToAnimation("STANDARD", new Rectangle2D(2 * 32, 6 *
+		 * 32, 32, 32)); animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 *
+		 * 32, 6 * 32, 32, 32)); MapObstacle object = new MapObstacle(sprites, 100, 100,
+		 * 32, 32, animator, true, true, false); object.addHitbox(0, 0, 32, 32);
+		 * tiles.add(object);
+		 * 
+		 * animator = new Animator(); animator.addAnimation("STANDARD");
+		 * animator.addFrameToAnimation("STANDARD", new Rectangle2D(15 * 32, 2 * 32, 32,
+		 * 32)); object = new MapObstacle(sprites, 132, 100, 32, 32, animator, false,
+		 * false, false); tiles.add(object);
+		 * 
+		 * animator = new Animator(); animator.addAnimation("STANDARD");
+		 * animator.addFrameToAnimation("STANDARD", new Rectangle2D(0 * 32, 1 * 32, 32,
+		 * 32)); animator.addFrameToAnimation("STANDARD", new Rectangle2D(1 * 32, 1 *
+		 * 32, 32, 32)); animator.addFrameToAnimation("STANDARD", new Rectangle2D(2 *
+		 * 32, 1 * 32, 32, 32)); animator.addFrameToAnimation("STANDARD", new
+		 * Rectangle2D(1 * 32, 1 * 32, 32, 32)); object = new MapObstacle(sprites, 164,
+		 * 100, 32, 32, animator, false, true, true); object.setInteraction(new
+		 * Interaction() {
+		 * 
+		 * @Override public void onInteraction() {
+		 * 
+		 * } }); object.addHitbox(0, 8, 32, 24); tiles.add(object);
+		 */
 	}
 
 	private void visualizeObstacles(Group root) {
 		for (int i = 0; i < tiles.length(); i++) {
+			root.getChildren().add(tiles.get(i).getHitboxList().get(0));
 			root.getChildren().add(tiles.get(i).getBody());
 		}
 	}

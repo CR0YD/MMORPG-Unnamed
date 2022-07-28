@@ -1,1 +1,2 @@
-
+Credits of the assets:
+"charsets_12_m-f_complete_by_antifarea_modified.png" is based on "charsets_12_m-f_complete_by_antifarea.png" by Antifarea licensed CC-BY 3.0: https://opengameart.org/content/twelve-16x18-rpg-sprites-plus-base
