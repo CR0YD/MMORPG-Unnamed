@@ -2,21 +2,17 @@ package testing;
 
 public class MapObstacle extends MapObject {
 
-	private List<ObjectBox> hitbox;
-	private boolean hasCollision, hasAnimation, isInteractable, hasInteractionBox;
+	private double minInteractionDistanceX, maxInteractionDistanceX, minInteractionDistanceY, maxInteractionDistanceY;
+	private boolean hasCollision, hasAnimation, isInteractable;
 
+	private ObjectBox hitbox;
 	private Interaction interaction;
-	private ObjectBox interactionBox;
 
-	public MapObstacle(double x, double y, double width, double height, Animator animator,
-			boolean hasAnimation, boolean hasCollision, boolean isInteractable) {
+	public MapObstacle(double x, double y, double width, double height, Animator animator, boolean hasAnimation) {
 		super(x, y, width, height, animator, "STANDARD");
 		this.hasAnimation = hasAnimation;
-		this.hasCollision = hasCollision;
-		this.isInteractable = isInteractable;
-		if (this.hasCollision) {
-			hitbox = new List<>();
-		}
+		hasCollision = false;
+		isInteractable = false;
 		moveTo(x, y);
 	}
 
@@ -26,9 +22,6 @@ public class MapObstacle extends MapObject {
 		if (hasCollision) {
 			moveHitboxTo(body.getTranslateX(), body.getTranslateY());
 		}
-		if (hasInteractionBox) {
-			interactionBox.moveTo(body.getTranslateX(), body.getTranslateY());
-		}
 	}
 
 	@Override
@@ -37,36 +30,34 @@ public class MapObstacle extends MapObject {
 		if (hasCollision) {
 			moveHitboxTo(body.getTranslateX(), body.getTranslateY());
 		}
-		if (hasInteractionBox) {
-			interactionBox.moveTo(body.getTranslateX(), body.getTranslateY());
+		if (center != null) {
+			setCenter(hitbox.getBoundsInParent().getMinX() + hitbox.getWidth(),
+					hitbox.getBoundsInParent().getMinY() + hitbox.getHeight());
 		}
 	}
 
 	public void moveHitboxTo(double x, double y) {
-		for (int i = 0; i < hitbox.length(); i++) {
-			hitbox.get(i).moveTo(x, y);
-		}
+		hitbox.moveTo(x, y);
 	}
 
 	public void alignHitbox() {
-		for (int i = 0; i < hitbox.length(); i++) {
-			hitbox.get(i).moveTo(body.getTranslateX(), body.getTranslateY());
-		}
+		hitbox.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
 	/**
 	 * @param x Relative to the x-coordinate of the object's body.
 	 * @param y Relative to the y-coordinate of the object's body.
 	 */
-	public void addHitbox(double x, double y, double width, double height) {
+	public void setHitbox(double x, double y, double width, double height) {
 		if (!hasCollision) {
-			return;
+			hasCollision = true;
 		}
-		hitbox.add(new ObjectBox(x, y, width, height));
+		hitbox = new ObjectBox(x, y, width, height);
 		alignHitbox();
+		configureCenter();
 	}
 
-	public List<ObjectBox> getHitboxList() {
+	public ObjectBox getHitbox() {
 		return hitbox;
 	}
 
@@ -83,21 +74,40 @@ public class MapObstacle extends MapObject {
 	}
 
 	public void setInteraction(Interaction interaction) {
+		isInteractable = true;
 		this.interaction = interaction;
 	}
 
-	public void setInteractionBox(double x, double y, double width, double height) {
-		interactionBox = new ObjectBox(x, y, width, height);
-		interactionBox.moveTo(body.getTranslateX(), body.getTranslateY());
-		hasInteractionBox = true;
+	public void setInteractionDistance(double minX, double maxX, double minY, double maxY) {
+		minInteractionDistanceX = minX;
+		maxInteractionDistanceX = maxX;
+		minInteractionDistanceY = minY;
+		maxInteractionDistanceY = maxY;
+	}
+
+	public double getMinInteractionDistanceX() {
+		return minInteractionDistanceX;
+	}
+
+	public double getMaxInteractionDistanceX() {
+		return maxInteractionDistanceX;
 	}
 	
-	public ObjectBox getInteractionBox() {
-		return interactionBox;
+	public double getMinInteractionDistanceY() {
+		return minInteractionDistanceY;
+	}
+
+	public double getMaxInteractionDistanceY() {
+		return maxInteractionDistanceY;
 	}
 
 	public void onInteraction() {
 		interaction.onInteraction();
+	}
+
+	private void configureCenter() {
+		setCenter(hitbox.getBoundsInParent().getMinX() + hitbox.getWidth() / 2,
+				hitbox.getBoundsInParent().getMinY() + hitbox.getHeight() / 2);
 	}
 
 }

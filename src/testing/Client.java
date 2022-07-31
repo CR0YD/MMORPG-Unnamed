@@ -2,6 +2,7 @@ package testing;
 
 import java.io.IOException;
 
+import finished.List;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.property.LongProperty;
@@ -148,10 +149,10 @@ public class Client extends Application {
 			player.addHitboxDown(2, player.getHeight(), sprites.COLUMN_WIDTH - 6, 1);
 			player.addHitboxLeft(1, player.getHeight() - 9, 1, 9);
 			player.addHitboxRight(player.getWidth() - 4, player.getHeight() - 9, 1, 9);
-			player.addInteractionTriggerBox(-4, player.getHeight() - 15, 38, 20);
-			
+
+			player.configureCenter();
 			player.checkPlayerBeforeStart();
-			
+
 			playerController = new PlayerController(player, 1);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -160,14 +161,12 @@ public class Client extends Application {
 	}
 
 	private void visualizePlayer(Group root) {
-		root.getChildren().add(player.getInteractionTriggerBox());
-
 		root.getChildren().add(player.hitboxUp);
 		root.getChildren().add(player.hitboxDown);
 		root.getChildren().add(player.hitboxLeft);
 		root.getChildren().add(player.hitboxRight);
 
-		root.getChildren().add(player.getBody());
+		root.getChildren().add(player.getNode());
 	}
 
 	private void initWorldObjects() {
@@ -180,12 +179,11 @@ public class Client extends Application {
 		}
 		Animator animator = new Animator(sprites);
 		animator.addAnimation("STANDARD");
-		animator.addFrameToAnimation("STANDARD", 3,2);
-		animator.addFrameToAnimation("STANDARD",3,0);
-		MapObstacle object = new MapObstacle(100, 100, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT, animator,
-				false, true, true);
-		object.addHitbox(0, 0, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT);
-		object.setInteractionBox(-16, -16, 64, 64);
+		animator.addFrameToAnimation("STANDARD", 3, 2);
+		animator.addFrameToAnimation("STANDARD", 3, 0);
+		MapObstacle object = new MapObstacle(100, 100, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT, animator, false);
+		object.setHitbox(0, 0, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT);
+		object.setInteractionDistance(40, 40, 30, 30);
 		object.setInteraction(new Interaction() {
 
 			@Override
@@ -198,9 +196,7 @@ public class Client extends Application {
 
 	private void visualizeObstacles(Group root) {
 		for (int i = 0; i < tiles.length(); i++) {
-			root.getChildren().add(tiles.get(i).getInteractionBox());
-			// root.getChildren().add(tiles.get(i).getHitboxList().get(0));
-			root.getChildren().add(tiles.get(i).getBody());
+			root.getChildren().add(tiles.get(i).getNode());
 		}
 	}
 

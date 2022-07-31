@@ -1,5 +1,6 @@
 package testing;
 
+import finished.List;
 import javafx.geometry.Rectangle2D;
 
 public class Animator {

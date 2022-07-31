@@ -1,5 +1,6 @@
 package testing;
 
+import finished.List;
 import testing.Player.CollisionDirection;
 
 public class PlayerController {
@@ -18,8 +19,8 @@ public class PlayerController {
 	public PlayerController(Player player, double playerSpeed) {
 		this.player = player;
 		this.playerSpeed = playerSpeed;
-		playerX = this.player.getBody().getTranslateX();
-		playerY = this.player.getBody().getTranslateY();
+		playerX = this.player.getX();
+		playerY = this.player.getY();
 		currentPlayerDirection = PlayerFacingDirection.DOWN;
 	}
 
@@ -92,7 +93,7 @@ public class PlayerController {
 	}
 
 	public void checkPlayerStoppedMoving() {
-		if (player.getBody().getTranslateX() == playerX && player.getBody().getTranslateY() == playerY
+		if (player.getX() == playerX && player.getY() == playerY
 				&& (player.getCurrentFrameIdx() == 1 || player.getCurrentFrameIdx() == 3)
 				&& ((!up && !down && !left && !right) || ((up && down) && !(left || right))
 						|| ((left && right) && !(up || down)))) {
@@ -113,8 +114,8 @@ public class PlayerController {
 				player.changeAnimationTo("IDLE_RIGHT");
 			}
 		}
-		playerX = player.getBody().getTranslateX();
-		playerY = player.getBody().getTranslateY();
+		playerX = player.getX();
+		playerY = player.getY();
 	}
 
 	public void checkCollision(List<MapObstacle> obstacles) {
@@ -124,48 +125,48 @@ public class PlayerController {
 			}
 			if (up && !down && left && !right && !collisionUp && !collisionLeft) {
 				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Up)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Up)) {
 					collisionUp = true;
 				}
 				player.alignHitbox();
 				player.moveHitbox((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1), 0);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Left)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Left)) {
 					collisionLeft = true;
 				}
 				player.alignHitbox();
 			}
 			if (up && !down && right && !left && !collisionUp && !collisionRight) {
 				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Up)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Up)) {
 					collisionUp = true;
 				}
 				player.alignHitbox();
 				player.moveHitbox((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1), 0);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Right)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Right)) {
 					collisionRight = true;
 				}
 				player.alignHitbox();
 			}
 			if (down && !up && left && !right && !collisionDown && !collisionLeft) {
 				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Down)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Down)) {
 					collisionDown = true;
 				}
 				player.alignHitbox();
 				player.moveHitbox((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1), 0);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Left)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Left)) {
 					collisionLeft = true;
 				}
 				player.alignHitbox();
 			}
 			if (down && !up && right && !left && !collisionDown && !collisionRight) {
 				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Down)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Down)) {
 					collisionDown = true;
 				}
 				player.alignHitbox();
 				player.moveHitbox((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1), 0);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Right)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Right)) {
 					collisionRight = true;
 				}
 				player.alignHitbox();
@@ -174,7 +175,7 @@ public class PlayerController {
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 					&& !collisionUp) {
 				player.moveHitbox(0, -playerSpeed);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Up)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Up)) {
 					collisionUp = true;
 				}
 				player.alignHitbox();
@@ -183,7 +184,7 @@ public class PlayerController {
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 					&& !collisionDown) {
 				player.moveHitbox(0, playerSpeed);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Down)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Down)) {
 					collisionDown = true;
 				}
 				player.alignHitbox();
@@ -191,7 +192,7 @@ public class PlayerController {
 			if (left && !right && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionLeft) {
 				player.moveHitbox(-playerSpeed, 0);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Left)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Left)) {
 					collisionLeft = true;
 				}
 				player.alignHitbox();
@@ -199,7 +200,7 @@ public class PlayerController {
 			if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionRight) {
 				player.moveHitbox(playerSpeed, 0);
-				if (player.isColliding(obstacles.get(i).getHitboxList(), CollisionDirection.Right)) {
+				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Right)) {
 					collisionRight = true;
 				}
 				player.alignHitbox();
@@ -215,8 +216,17 @@ public class PlayerController {
 			if (!tiles.get(i).isInteractable()) {
 				continue;
 			}
-			if (player.getBody().getBoundsInParent().intersects(tiles.get(i).getInteractionBox().getBoundsInParent())) {
+			if (player.getCenter().getX()
+					- tiles.get(i).getCenter().getX() >= -tiles.get(i).getMinInteractionDistanceX()
+					&& player.getCenter().getX() - tiles.get(i).getCenter().getX() <= tiles.get(i)
+							.getMaxInteractionDistanceX()
+					&& player.getCenter().getY()
+							- tiles.get(i).getCenter().getY() >= -tiles.get(i).getMinInteractionDistanceY()
+					&& player.getCenter().getY() - tiles.get(i).getCenter().getY() <= tiles.get(i)
+							.getMaxInteractionDistanceY()) {
 				tiles.get(i).onInteraction();
+				wantsToInteract = false;
+				return;
 			}
 		}
 		wantsToInteract = false;
