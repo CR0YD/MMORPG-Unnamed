@@ -9,24 +9,22 @@ import javafx.scene.image.ImageView;
 
 public class MapObject {
 
-	protected final SpriteSheet SPRITES;
 	protected ImageView body;
 	public final double WIDTH, HEIGHT;
 	protected final Animator ANIMATOR;
 
-	public MapObject(SpriteSheet sprites, double x, double y, double width, double height, Animator animator) {
-		SPRITES = sprites;
+	public MapObject(double x, double y, double width, double height, Animator animator, String firstAnimationName) {
 		WIDTH = width;
 		HEIGHT = height;
+		ANIMATOR = animator;
+		ANIMATOR.setCurrentAnimation(firstAnimationName);
 		try {
-			body = new ImageView(new Image(new FileInputStream(SPRITES.IMAGE_PATH)));
+			body = new ImageView(new Image(new FileInputStream(ANIMATOR.SPRITES.IMAGE_PATH)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		body.setFitWidth(width);
 		body.setFitHeight(height);
-		ANIMATOR = animator;
-		ANIMATOR.setCurrentAnimation("STANDARD");
 		body.setViewport(ANIMATOR.getViewport());
 		moveTo(x, y);
 	}
@@ -62,8 +60,8 @@ public class MapObject {
 	}
 
 	public void switchImageTo(int column, int row) {
-		body.setViewport(new Rectangle2D(SPRITES.COLUMN_WIDTH * column, SPRITES.ROW_HEIGHT * row, SPRITES.COLUMN_WIDTH,
-				SPRITES.ROW_HEIGHT));
+		body.setViewport(new Rectangle2D(ANIMATOR.SPRITES.COLUMN_WIDTH * column, ANIMATOR.SPRITES.ROW_HEIGHT * row, ANIMATOR.SPRITES.COLUMN_WIDTH,
+				ANIMATOR.SPRITES.ROW_HEIGHT));
 	}
 
 	public void move(double x, double y) {

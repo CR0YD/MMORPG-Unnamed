@@ -2,18 +2,26 @@ package testing;
 
 import java.io.IOException;
 
+import javafx.scene.paint.Color;
+
 public class Player extends MapObject {
 
-	public PlayerHitbox hitboxUp, hitboxDown, hitboxLeft, hitboxRight;
+	public ObjectBox hitboxUp, hitboxDown, hitboxLeft, hitboxRight, interactionTriggerBox;
 
 	public enum CollisionDirection {
 		Up, Down, Left, Right;
 	}
 
-	public Player(SpriteSheet sprites, double x, double y, double width, double height, Animator animator)
-			throws IOException {
-		super(sprites, x, y, width, height, animator);
+	public Player(double x, double y, double width, double height, Animator animator) throws IOException {
+		super(x, y, width, height, animator, "IDLE_DOWN");
 		firstMoveTo(x, y);
+	}
+
+	@Override
+	public void move(double x, double y) {
+		super.move(x, y);
+		alignHitbox();
+		interactionTriggerBox.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
 	/**
@@ -83,7 +91,8 @@ public class Player extends MapObject {
 	 * @param y Relative to the y-coordinate of the player's body.
 	 */
 	public void addHitboxUp(double x, double y, double width, double height) {
-		hitboxUp = new PlayerHitbox(x, y, width, height, CollisionDirection.Up);
+		hitboxUp = new ObjectBox(x, y, width, height);
+		hitboxUp.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
 	/**
@@ -91,7 +100,8 @@ public class Player extends MapObject {
 	 * @param y Relative to the y-coordinate of the player's body.
 	 */
 	public void addHitboxDown(double x, double y, double width, double height) {
-		hitboxDown = new PlayerHitbox(x, y, width, height, CollisionDirection.Down);
+		hitboxDown = new ObjectBox(x, y, width, height);
+		hitboxDown.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
 	/**
@@ -99,7 +109,8 @@ public class Player extends MapObject {
 	 * @param y Relative to the y-coordinate of the player's body.
 	 */
 	public void addHitboxLeft(double x, double y, double width, double height) {
-		hitboxLeft = new PlayerHitbox(x, y, width, height, CollisionDirection.Left);
+		hitboxLeft = new ObjectBox(x, y, width, height);
+		hitboxLeft.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
 	/**
@@ -107,17 +118,45 @@ public class Player extends MapObject {
 	 * @param y Relative to the y-coordinate of the player's body.
 	 */
 	public void addHitboxRight(double x, double y, double width, double height) {
-		hitboxRight = new PlayerHitbox(x, y, width, height, CollisionDirection.Right);
+		hitboxRight = new ObjectBox(x, y, width, height);
+		hitboxRight.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
-	public class PlayerHitbox extends ObjectBox {
+	public void addInteractionTriggerBox(double x, double y, double width, double height) {
+		interactionTriggerBox = new ObjectBox(x, y, width, height);
+		interactionTriggerBox.setFill(Color.BLUE);
+		interactionTriggerBox.moveTo(body.getTranslateX(), body.getTranslateY());
+	}
 
-		public final CollisionDirection DETECTION_DIRECTION;
+	public ObjectBox getInteractionTriggerBox() {
+		return interactionTriggerBox;
+	}
 
-		public PlayerHitbox(double x, double y, double width, double height, CollisionDirection detectionDirection) {
-			super(x, y, width, height);
-			DETECTION_DIRECTION = detectionDirection;
+	/**
+	 * Ends the program if the Player object is missing an important object. (Which
+	 * object misses will be printed out.)
+	 * Should be called before the main game loop.
+	 */
+	public void checkPlayerBeforeStart() {
+		if (hitboxUp == null) {
+			System.err.println("Player object is missing a hitboxUp object!");
+			System.exit(0);
 		}
-
+		if (hitboxDown == null) {
+			System.err.println("Player object is missing a hitboxDown object!");
+			System.exit(0);
+		}
+		if (hitboxLeft == null) {
+			System.err.println("Player object is missing a hitboxLeft object!");
+			System.exit(0);
+		}
+		if (hitboxRight == null) {
+			System.err.println("Player object is missing a hitboxRight object!");
+			System.exit(0);
+		}
+		if (interactionTriggerBox == null) {
+			System.err.println("Player object is missing a interactionTriggerBox object!");
+			System.exit(0);
+		}
 	}
 }

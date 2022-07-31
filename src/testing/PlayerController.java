@@ -14,15 +14,15 @@ public class PlayerController {
 	private enum PlayerFacingDirection {
 		UP, DOWN, LEFT, RIGHT;
 	}
-	
+
 	public PlayerController(Player player, double playerSpeed) {
 		this.player = player;
 		this.playerSpeed = playerSpeed;
 		playerX = this.player.getBody().getTranslateX();
 		playerY = this.player.getBody().getTranslateY();
-		currentPlayerDirection = PlayerFacingDirection.UP;
+		currentPlayerDirection = PlayerFacingDirection.DOWN;
 	}
-	
+
 	public void playerWantsToInteract() {
 		wantsToInteract = true;
 	}
@@ -94,7 +94,8 @@ public class PlayerController {
 	public void checkPlayerStoppedMoving() {
 		if (player.getBody().getTranslateX() == playerX && player.getBody().getTranslateY() == playerY
 				&& (player.getCurrentFrameIdx() == 1 || player.getCurrentFrameIdx() == 3)
-				&& ((!up && !down && !left && !right) || (up && down) || (left && right))) {
+				&& ((!up && !down && !left && !right) || ((up && down) && !(left || right))
+						|| ((left && right) && !(up || down)))) {
 			if (currentPlayerDirection == PlayerFacingDirection.UP
 					&& !player.getCurrentAnimationName().equals("IDLE_UP")) {
 				player.changeAnimationTo("IDLE_UP");
@@ -132,10 +133,6 @@ public class PlayerController {
 					collisionLeft = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_LEFT")) {
-					player.changeAnimationTo("MOVE_LEFT");
-					currentPlayerDirection = PlayerFacingDirection.LEFT;
-				}
 			}
 			if (up && !down && right && !left && !collisionUp && !collisionRight) {
 				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
@@ -148,10 +145,6 @@ public class PlayerController {
 					collisionRight = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_RIGHT")) {
-					player.changeAnimationTo("MOVE_RIGHT");
-					currentPlayerDirection = PlayerFacingDirection.RIGHT;
-				}
 			}
 			if (down && !up && left && !right && !collisionDown && !collisionLeft) {
 				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
@@ -164,10 +157,6 @@ public class PlayerController {
 					collisionLeft = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_LEFT")) {
-					player.changeAnimationTo("MOVE_LEFT");
-					currentPlayerDirection = PlayerFacingDirection.LEFT;
-				}
 			}
 			if (down && !up && right && !left && !collisionDown && !collisionRight) {
 				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
@@ -180,10 +169,6 @@ public class PlayerController {
 					collisionRight = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_RIGHT")) {
-					player.changeAnimationTo("MOVE_RIGHT");
-					currentPlayerDirection = PlayerFacingDirection.RIGHT;
-				}
 			}
 			if (up && !down
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
@@ -193,10 +178,6 @@ public class PlayerController {
 					collisionUp = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_UP")) {
-					player.changeAnimationTo("MOVE_UP");
-					currentPlayerDirection = PlayerFacingDirection.UP;
-				}
 			}
 			if (down && !up
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
@@ -206,10 +187,6 @@ public class PlayerController {
 					collisionDown = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_DOWN")) {
-					player.changeAnimationTo("MOVE_DOWN");
-					currentPlayerDirection = PlayerFacingDirection.DOWN;
-				}
 			}
 			if (left && !right && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionLeft) {
@@ -218,10 +195,6 @@ public class PlayerController {
 					collisionLeft = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_LEFT")) {
-					player.changeAnimationTo("MOVE_LEFT");
-					currentPlayerDirection = PlayerFacingDirection.LEFT;
-				}
 			}
 			if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionRight) {
@@ -230,14 +203,10 @@ public class PlayerController {
 					collisionRight = true;
 				}
 				player.alignHitbox();
-				if (!player.getCurrentAnimationName().equals("MOVE_RIGHT")) {
-					player.changeAnimationTo("MOVE_RIGHT");
-					currentPlayerDirection = PlayerFacingDirection.RIGHT;
-				}
 			}
 		}
 	}
-	
+
 	public void checkInteraction(List<MapObstacle> tiles) {
 		if (!wantsToInteract) {
 			return;
@@ -246,9 +215,32 @@ public class PlayerController {
 			if (!tiles.get(i).isInteractable()) {
 				continue;
 			}
-			tiles.get(i).onInteraction();
+			if (player.getBody().getBoundsInParent().intersects(tiles.get(i).getInteractionBox().getBoundsInParent())) {
+				tiles.get(i).onInteraction();
+			}
 		}
 		wantsToInteract = false;
+	}
+
+	public void checkPlayerAnimation() {
+		if (up && (!(down || left || right) || (!down && left && right))
+				&& !player.getCurrentAnimationName().equals("MOVE_UP")) {
+			player.changeAnimationTo("MOVE_UP");
+			currentPlayerDirection = PlayerFacingDirection.UP;
+		}
+		if (down && (!(up || left || right) || (!up && left && right))
+				&& !player.getCurrentAnimationName().equals("MOVE_DOWN")) {
+			player.changeAnimationTo("MOVE_DOWN");
+			currentPlayerDirection = PlayerFacingDirection.DOWN;
+		}
+		if (left && !right && !player.getCurrentAnimationName().equals("MOVE_LEFT")) {
+			player.changeAnimationTo("MOVE_LEFT");
+			currentPlayerDirection = PlayerFacingDirection.LEFT;
+		}
+		if (right && !left && !player.getCurrentAnimationName().equals("MOVE_RIGHT")) {
+			player.changeAnimationTo("MOVE_RIGHT");
+			currentPlayerDirection = PlayerFacingDirection.RIGHT;
+		}
 	}
 
 }

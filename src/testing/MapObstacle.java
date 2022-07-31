@@ -1,18 +1,16 @@
 package testing;
 
-import javafx.scene.shape.Rectangle;
-
 public class MapObstacle extends MapObject {
 
 	private List<ObjectBox> hitbox;
 	private boolean hasCollision, hasAnimation, isInteractable, hasInteractionBox;
 
 	private Interaction interaction;
-	private InteractionBox interactionBox;
+	private ObjectBox interactionBox;
 
-	public MapObstacle(SpriteSheet sprites, double x, double y, double width, double height, Animator animator,
+	public MapObstacle(double x, double y, double width, double height, Animator animator,
 			boolean hasAnimation, boolean hasCollision, boolean isInteractable) {
-		super(sprites, x, y, width, height, animator);
+		super(x, y, width, height, animator, "STANDARD");
 		this.hasAnimation = hasAnimation;
 		this.hasCollision = hasCollision;
 		this.isInteractable = isInteractable;
@@ -89,37 +87,17 @@ public class MapObstacle extends MapObject {
 	}
 
 	public void setInteractionBox(double x, double y, double width, double height) {
-		interactionBox = new InteractionBox(x, y, width, height);
+		interactionBox = new ObjectBox(x, y, width, height);
+		interactionBox.moveTo(body.getTranslateX(), body.getTranslateY());
 		hasInteractionBox = true;
+	}
+	
+	public ObjectBox getInteractionBox() {
+		return interactionBox;
 	}
 
 	public void onInteraction() {
 		interaction.onInteraction();
-	}
-
-	private class InteractionBox extends Rectangle {
-
-		public final double OFFSET_X, OFFSET_Y;
-
-		public InteractionBox(double x, double y, double width, double height) {
-			super(0, 0, width, height);
-			setTranslateX(x);
-			setTranslateY(y);
-			OFFSET_X = x;
-			OFFSET_Y = y;
-			return;
-		}
-
-		public void move(double x, double y) {
-			setTranslateX(getTranslateX() + x);
-			setTranslateY(getTranslateY() + y);
-		}
-
-		public void moveTo(double x, double y) {
-			setTranslateX(x + OFFSET_X);
-			setTranslateY(y + OFFSET_Y);
-		}
-
 	}
 
 }
