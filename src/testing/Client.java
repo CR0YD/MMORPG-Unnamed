@@ -101,7 +101,7 @@ public class Client extends Application {
 					return;
 				}
 				if (timestamp - lastUpdateTime.get() > 1000000000 / 100) {
-					tick();
+					tick(root);
 					lastUpdateTime.set(timestamp);
 					return;
 				}
@@ -161,10 +161,12 @@ public class Client extends Application {
 	}
 
 	private void visualizePlayer(Group root) {
-		root.getChildren().add(player.hitboxUp);
-		root.getChildren().add(player.hitboxDown);
-		root.getChildren().add(player.hitboxLeft);
-		root.getChildren().add(player.hitboxRight);
+		/*
+		 * root.getChildren().add(player.hitboxUp);
+		 * root.getChildren().add(player.hitboxDown);
+		 * root.getChildren().add(player.hitboxLeft);
+		 * root.getChildren().add(player.hitboxRight);
+		 */
 
 		root.getChildren().add(player.getNode());
 	}
@@ -182,15 +184,17 @@ public class Client extends Application {
 		animator.addFrameToAnimation("STANDARD", 3, 2);
 		animator.addFrameToAnimation("STANDARD", 3, 0);
 		MapObstacle object = new MapObstacle(100, 100, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT, animator, false);
-		object.setHitbox(0, 0, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT);
+		object.setHitbox(0, 20, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT - 20);
 		object.setInteractionDistance(40, 40, 30, 30);
-		object.setInteraction(new Interaction() {
+		/*
+		 * object.setInteraction(new Interaction() {
+		 * 
+		 * @Override public void onInteraction() { object.nextAnimationFrame(); } });
+		 */
+		tiles.add(object);
 
-			@Override
-			public void onInteraction() {
-				object.nextAnimationFrame();
-			}
-		});
+		object = new MapObstacle(0, 100, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT, animator, false);
+		object.setHitbox(0, 20, sprites.COLUMN_WIDTH, sprites.ROW_HEIGHT - 20);
 		tiles.add(object);
 	}
 
@@ -200,7 +204,7 @@ public class Client extends Application {
 		}
 	}
 
-	private void tick() {
+	private void tick(Group root) {
 		// when window focus is lost, no input shall be proceeded
 		if (!stage.isFocused()) {
 			playerController.setAllPlayerInputs(false);
@@ -212,6 +216,20 @@ public class Client extends Application {
 			playerController.updatePlayerPosition();
 			playerController.checkPlayerStoppedMoving();
 			playerController.checkInteraction(tiles);
+			for (int i = 0; i < tiles.length(); i++) {
+				if (player.getHitboxUp().getTranslateY() < tiles.get(i).getHitbox().getTranslateY() && root.getChildren()
+						.indexOf(player.getNode()) > root.getChildren().indexOf(tiles.get(i).getNode())) {
+					root.getChildren().remove(player.getNode());
+					root.getChildren().add(root.getChildren().indexOf(tiles.get(i).getNode()), player.getNode());
+				}
+				if (player.getHitboxUp().getTranslateY() > tiles.get(i).getHitbox().getTranslateY()
+						+ tiles.get(i).getHitbox().getHeight()
+						&& root.getChildren().indexOf(player.getNode()) < root.getChildren()
+								.indexOf(tiles.get(i).getNode())) {
+					root.getChildren().remove(player.getNode());
+					root.getChildren().add(root.getChildren().indexOf(tiles.get(i).getNode()) + 1, player.getNode());
+				}
+			}
 		}
 		// basic animation: every tenth frame, move frame by one
 		if (frameCounter % 10 == 0) {

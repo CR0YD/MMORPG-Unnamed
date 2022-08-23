@@ -87,6 +87,10 @@ public class Player extends MapObject {
 		hitboxUp = new ObjectBox(x, y, width, height);
 		hitboxUp.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
+	
+	public ObjectBox getHitboxUp() {
+		return hitboxUp;
+	}
 
 	/**
 	 * @param x Relative to the x-coordinate of the player's body.

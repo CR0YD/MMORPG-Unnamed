@@ -5,6 +5,8 @@ import javafx.scene.Group;
 
 public class Map {
 
+	
+	
 	private List<MapObstacle> obstacles;
 	
 	public Map() {
