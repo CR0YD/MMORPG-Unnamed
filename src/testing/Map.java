@@ -1,23 +1,19 @@
 package testing;
 
+import java.io.File;
+
 import finished.List;
-import javafx.scene.Group;
 
 public class Map {
-
 	
-	
-	private List<MapObstacle> obstacles;
+	public final List<Field> FIELDS;
 	
 	public Map() {
-		obstacles = new List<>();
-	}
-	
-	public void add(MapObstacle object, int layer) {
-		
-	}
-	
-	public void show(Group root) {
+		FIELDS = new List<>();
+		File[] mapFolder = new File("assets/map").listFiles();
+		for (int i = 0; i < mapFolder.length; i++) {
+			FIELDS.add(new Field(mapFolder[i].getPath()));
+		}
 		
 	}
 	

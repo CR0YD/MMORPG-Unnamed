@@ -35,6 +35,13 @@ public class Client extends Application {
 		initWorldObjects();
 
 		Group root = new Group();
+		Map map = new Map();
+		for (int i = 0; i < map.FIELDS.length(); i++) {
+			System.out.println(map.FIELDS.get(i).HEIGHT);
+			for (int j = 0; j < map.FIELDS.get(i).CHUNKS.length(); j++) {
+				root.getChildren().add(map.FIELDS.get(i).CHUNKS.get(j).BODY);
+			}
+		}
 		visualizeObstacles(root);
 		visualizePlayer(root);
 
@@ -174,11 +181,7 @@ public class Client extends Application {
 	private void initWorldObjects() {
 		tiles = new List<>();
 		SpriteSheet sprites = null;
-		try {
-			sprites = new SpriteSheet("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png", 32, 36);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		sprites = new SpriteSheet("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png", 32, 36);
 		Animator animator = new Animator(sprites);
 		animator.addAnimation("STANDARD");
 		animator.addFrameToAnimation("STANDARD", 3, 2);
@@ -217,8 +220,8 @@ public class Client extends Application {
 			playerController.checkPlayerStoppedMoving();
 			playerController.checkInteraction(tiles);
 			for (int i = 0; i < tiles.length(); i++) {
-				if (player.getHitboxUp().getTranslateY() < tiles.get(i).getHitbox().getTranslateY() && root.getChildren()
-						.indexOf(player.getNode()) > root.getChildren().indexOf(tiles.get(i).getNode())) {
+				if (player.getHitboxUp().getTranslateY() < tiles.get(i).getHitbox().getTranslateY() && root
+						.getChildren().indexOf(player.getNode()) > root.getChildren().indexOf(tiles.get(i).getNode())) {
 					root.getChildren().remove(player.getNode());
 					root.getChildren().add(root.getChildren().indexOf(tiles.get(i).getNode()), player.getNode());
 				}
