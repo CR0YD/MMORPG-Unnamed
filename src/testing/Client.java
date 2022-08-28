@@ -36,12 +36,7 @@ public class Client extends Application {
 
 		Group root = new Group();
 		Map map = new Map();
-		for (int i = 0; i < map.FIELDS.length(); i++) {
-			System.out.println(map.FIELDS.get(i).HEIGHT);
-			for (int j = 0; j < map.FIELDS.get(i).CHUNKS.length(); j++) {
-				root.getChildren().add(map.FIELDS.get(i).CHUNKS.get(j).BODY);
-			}
-		}
+		map.switchMapTo(0, root);
 		visualizeObstacles(root);
 		visualizePlayer(root);
 
@@ -61,15 +56,19 @@ public class Client extends Application {
 			public void handle(KeyEvent event) {
 				if (event.getText().equalsIgnoreCase("w")) {
 					playerController.setPlayerInputUp(true);
+					map.switchMapTo(1, root);
 				}
 				if (event.getText().equalsIgnoreCase("s")) {
 					playerController.setPlayerInputDown(true);
+					map.switchMapTo(1, root);
 				}
 				if (event.getText().equalsIgnoreCase("a")) {
 					playerController.setPlayerInputLeft(true);
+					map.switchMapTo(0, root);
 				}
 				if (event.getText().equalsIgnoreCase("d")) {
 					playerController.setPlayerInputRight(true);
+					map.switchMapTo(0, root);
 				}
 				if (event.getCode() == KeyCode.ESCAPE) {
 					endGame();

@@ -18,6 +18,7 @@ public class Chunk {
 		}
 		BODY.setTranslateX(Integer.parseInt(path.substring(0, path.indexOf(".")).split("-")[0]) * 480);
 		BODY.setTranslateY(Integer.parseInt(path.substring(0, path.indexOf(".")).split("-")[1]) * 480);
+		BODY.setId(path);
 	}
 	
 }
