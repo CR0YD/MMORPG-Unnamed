@@ -5,14 +5,11 @@ import java.io.IOException;
 import finished.List;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.event.EventHandler;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Client extends Application {
@@ -31,89 +28,112 @@ public class Client extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		initPlayer();
-		initWorldObjects();
-
 		Group root = new Group();
-		Map map = new Map();
-		map.switchMapTo(0, root);
-		visualizeObstacles(root);
-		visualizePlayer(root);
-
-		Scene scene = new Scene(root, 200, 200);
-
+		Scene scene = new Scene(root, 480, 480);
+		scene.setFill(Color.BLACK);
 		stage = primaryStage;
 		stage.setTitle("MMORPG - unnamed"); // Set the stage title
-		stage.setScene(scene); // Place the scene in the stage
-		stage.setFullScreen(false);
+		stage.setScene(scene); // Placing the scene in the stage
+		stage.setFullScreen(true);
+		stage.setResizable(false);
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		stage.show();
-
-		// input/ event handler
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getText().equalsIgnoreCase("w")) {
-					playerController.setPlayerInputUp(true);
-					map.switchMapTo(1, root);
-				}
-				if (event.getText().equalsIgnoreCase("s")) {
-					playerController.setPlayerInputDown(true);
-					map.switchMapTo(1, root);
-				}
-				if (event.getText().equalsIgnoreCase("a")) {
-					playerController.setPlayerInputLeft(true);
-					map.switchMapTo(0, root);
-				}
-				if (event.getText().equalsIgnoreCase("d")) {
-					playerController.setPlayerInputRight(true);
-					map.switchMapTo(0, root);
-				}
-				if (event.getCode() == KeyCode.ESCAPE) {
-					endGame();
-				}
-			}
-		});
-		scene.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getText().equalsIgnoreCase("w")) {
-					playerController.setPlayerInputUp(false);
-				}
-				if (event.getText().equalsIgnoreCase("s")) {
-					playerController.setPlayerInputDown(false);
-				}
-				if (event.getText().equalsIgnoreCase("a")) {
-					playerController.setPlayerInputLeft(false);
-				}
-				if (event.getText().equalsIgnoreCase("d")) {
-					playerController.setPlayerInputRight(false);
-				}
-				if (event.getText().equalsIgnoreCase("f")) {
-					playerController.playerWantsToInteract();
-				}
-			}
-		});
+		
+		Game game = new Game(stage, scene, root);
+		
 		// game loop
 		timer = new AnimationTimer() {
-			LongProperty lastUpdateTime = new SimpleLongProperty(0);
 
 			@Override
 			public void handle(long timestamp) {
-				if (lastUpdateTime.get() == 0) {
-					lastUpdateTime.set(timestamp);
-					return;
-				}
-				if (timestamp - lastUpdateTime.get() > 1000000000 / 100) {
-					tick(root);
-					lastUpdateTime.set(timestamp);
-					return;
-				}
+				game.tick(root);
 			}
 		};
 		timer.start();
+
+//		initPlayer();
+//		initWorldObjects();
+//
+//		Group root = new Group();
+//		Map map = new Map();
+//		map.switchMapTo(0, root);
+//		visualizeObstacles(root);
+//		visualizePlayer(root);
+//
+//		Scene scene = new Scene(root, 200, 200);
+//
+//		stage = primaryStage;
+//		stage.setTitle("MMORPG - unnamed"); // Set the stage title
+//		stage.setScene(scene); // Place the scene in the stage
+//		stage.setFullScreen(false);
+//		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+//		stage.show();
+//
+//		// input/ event handler
+//		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+//
+//			@Override
+//			public void handle(KeyEvent event) {
+//				if (event.getText().equalsIgnoreCase("w")) {
+//					playerController.setPlayerInputUp(true);
+//					map.switchMapTo(1, root);
+//				}
+//				if (event.getText().equalsIgnoreCase("s")) {
+//					playerController.setPlayerInputDown(true);
+//					map.switchMapTo(1, root);
+//				}
+//				if (event.getText().equalsIgnoreCase("a")) {
+//					playerController.setPlayerInputLeft(true);
+//					map.switchMapTo(0, root);
+//				}
+//				if (event.getText().equalsIgnoreCase("d")) {
+//					playerController.setPlayerInputRight(true);
+//					map.switchMapTo(0, root);
+//				}
+//				if (event.getCode() == KeyCode.ESCAPE) {
+//					endGame();
+//				}
+//			}
+//		});
+//		scene.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+//
+//			@Override
+//			public void handle(KeyEvent event) {
+//				if (event.getText().equalsIgnoreCase("w")) {
+//					playerController.setPlayerInputUp(false);
+//				}
+//				if (event.getText().equalsIgnoreCase("s")) {
+//					playerController.setPlayerInputDown(false);
+//				}
+//				if (event.getText().equalsIgnoreCase("a")) {
+//					playerController.setPlayerInputLeft(false);
+//				}
+//				if (event.getText().equalsIgnoreCase("d")) {
+//					playerController.setPlayerInputRight(false);
+//				}
+//				if (event.getText().equalsIgnoreCase("f")) {
+//					playerController.playerWantsToInteract();
+//				}
+//			}
+//		}); // game loop
+//		timer = new AnimationTimer() {
+//			LongProperty lastUpdateTime = new SimpleLongProperty(0);
+//
+//			@Override
+//			public void handle(long timestamp) {
+//				if (lastUpdateTime.get() == 0) {
+//					lastUpdateTime.set(timestamp);
+//					return;
+//				}
+//				if (timestamp - lastUpdateTime.get() > 1000000000 / 100) {
+//					tick(root);
+//					lastUpdateTime.set(timestamp);
+//					return;
+//				}
+//			}
+//		};
+//		timer.start();
+
 	}
 
 	private void initPlayer() {

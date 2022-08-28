@@ -1,0 +1,4 @@
+name:TestingObstacle
+type:obstacle
+sprites:charsets_12_m-f_complete_by_antifarea_modified.png
+image:[0, 0, 48, 48]

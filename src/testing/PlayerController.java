@@ -1,6 +1,8 @@
 package testing;
 
 import finished.List;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import testing.Player.CollisionDirection;
 
 public class PlayerController {
@@ -51,40 +53,76 @@ public class PlayerController {
 		right = input;
 	}
 
-	public void updatePlayerPosition() {
+	public void updatePlayerPosition(Map map, Scene scene, Group root) {
 		if (up && !down && left && !right && !collisionUp && !collisionLeft) {
 			player.move((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1),
 					(int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
+			if (0 > root.getTranslateX() && player.getX() < map.getCurrentField().WIDTH - scene.getWidth() / 2) {
+				root.setTranslateX(root.getTranslateX() + (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
+			}
+			if (0 > root.getTranslateY() && player.getY() < map.getCurrentField().HEIGHT - scene.getHeight() / 2) {
+				root.setTranslateY(root.getTranslateY() + (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
+			}
 		}
 		if (up && !down && right && !left && !collisionUp && !collisionRight) {
 			player.move((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1),
 					(int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
+			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX() && player.getX() > scene.getWidth() / 2) {
+				root.setTranslateX(root.getTranslateX() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
+			}
+			if (0 > root.getTranslateY() && player.getY() < map.getCurrentField().HEIGHT - scene.getHeight() / 2) {
+				root.setTranslateY(root.getTranslateY() + (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
+			}
 		}
 		if (down && !up && left && !right && !collisionDown && !collisionLeft) {
 			player.move((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1),
 					(int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
+			if (0 > root.getTranslateX() && player.getX() < map.getCurrentField().WIDTH - scene.getWidth() / 2) {
+				root.setTranslateX(root.getTranslateX() + (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
+			}
+			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY() && player.getY() > scene.getHeight() / 2) {
+				root.setTranslateY(root.getTranslateY() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
+			}
 		}
 		if (down && !up && right && !left && !collisionDown && !collisionRight) {
 			player.move((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1),
 					(int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
+			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX() && player.getX() > scene.getWidth() / 2) {
+				root.setTranslateX(root.getTranslateX() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
+			}
+			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY() && player.getY() > scene.getHeight() / 2) {
+				root.setTranslateY(root.getTranslateY() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
+			}
 		}
 		if (up && !down
 				&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 				&& !collisionUp) {
 			player.move(0, -playerSpeed);
+			if (0 > root.getTranslateY() && player.getY() < map.getCurrentField().HEIGHT - scene.getHeight() / 2) {
+				root.setTranslateY(root.getTranslateY() + playerSpeed);
+			}
 		}
 		if (down && !up
 				&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 				&& !collisionDown) {
 			player.move(0, playerSpeed);
+			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY() && player.getY() > scene.getHeight() / 2) {
+				root.setTranslateY(root.getTranslateY() - playerSpeed);
+			}
 		}
 		if (left && !right && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 				&& !collisionLeft) {
 			player.move(-playerSpeed, 0);
+			if (0 > root.getTranslateX() && player.getX() < map.getCurrentField().WIDTH - scene.getWidth() / 2) {
+				root.setTranslateX(root.getTranslateX() + playerSpeed);
+			}
 		}
 		if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 				&& !collisionRight) {
 			player.move(playerSpeed, 0);
+			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX() && player.getX() > scene.getWidth() / 2) {
+				root.setTranslateX(root.getTranslateX() - playerSpeed);
+			}
 		}
 		collisionUp = false;
 		collisionDown = false;
