@@ -3,6 +3,7 @@ package testing;
 import java.io.IOException;
 
 import finished.List;
+import finished.PrintTable;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Camera;
@@ -34,13 +35,13 @@ public class Client extends Application {
 		stage = primaryStage;
 		stage.setTitle("MMORPG - unnamed"); // Set the stage title
 		stage.setScene(scene); // Placing the scene in the stage
-		stage.setFullScreen(true);
+		stage.setFullScreen(false);
 		stage.setResizable(false);
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		stage.show();
-		
+
 		Game game = new Game(stage, scene, root);
-		
+
 		// game loop
 		timer = new AnimationTimer() {
 

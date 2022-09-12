@@ -10,15 +10,20 @@ public class Map {
 
 	private final List<Field> FIELDS;
 	private int currentFieldIdx;
+	
+	private final List<String[]> OBJECT_MODEL;
 
 	public Map() {
+		BlueprintReader reader = new BlueprintReader("assets/map/objects");
+		OBJECT_MODEL = reader.read();
+		
 		FIELDS = new List<>();
 		File[] mapFolder = new File("assets/map").listFiles();
 		for (int i = 0; i < mapFolder.length; i++) {
 			if (mapFolder[i].getName().equals("objects")) {
 				continue;
 			}
-			FIELDS.add(new Field(mapFolder[i].getPath()));
+			FIELDS.add(new Field(mapFolder[i].getPath(), OBJECT_MODEL));
 		}
 		currentFieldIdx = -1;
 	}
@@ -31,6 +36,9 @@ public class Map {
 			currentFieldIdx = idx;
 			for (int i = 0; i < FIELDS.get(currentFieldIdx).CHUNKS.length(); i++) {
 				root.getChildren().add(i,FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY);
+			}
+			for (int i = 0; i < FIELDS.get(currentFieldIdx).getObstacles().length(); i++) {
+				root.getChildren().add(FIELDS.get(currentFieldIdx).getObstacles().get(i).getImageView());
 			}
 			if (FIELDS.get(currentFieldIdx).WIDTH < stage.getWidth()) {
 				moveField((stage.getWidth() - FIELDS.get(currentFieldIdx).WIDTH) / 2, 0);
@@ -54,12 +62,18 @@ public class Map {
 			FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY.setTranslateX(FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY.getTranslateX() + x);
 			FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY.setTranslateY(FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY.getTranslateY() + y);
 		}
+		for (int i = 0; i < FIELDS.get(currentFieldIdx).getObstacles().length(); i++) {
+			FIELDS.get(currentFieldIdx).getObstacles().get(i).move(x, y);
+		}
 	}
 	
 	public void moveFieldTo(double x, double y) {
 		for (int i = 0; i < FIELDS.get(currentFieldIdx).CHUNKS.length(); i++) {
 			FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY.setTranslateX(FIELDS.get(currentFieldIdx).CHUNKS.get(i).OFFSET_X + x);
 			FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY.setTranslateY(FIELDS.get(currentFieldIdx).CHUNKS.get(i).OFFSET_Y + y);
+		}
+		for (int i = 0; i < FIELDS.get(currentFieldIdx).getObstacles().length(); i++) {
+			FIELDS.get(currentFieldIdx).getObstacles().get(i).moveTo(x, y);
 		}
 	}
 	
