@@ -3,10 +3,8 @@ package testing;
 import java.io.IOException;
 
 import finished.List;
-import finished.PrintTable;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -137,6 +135,7 @@ public class Client extends Application {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void initPlayer() {
 		try {
 			SpriteSheet sprites = new SpriteSheet("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png",
@@ -187,6 +186,7 @@ public class Client extends Application {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void visualizePlayer(Group root) {
 		/*
 		 * root.getChildren().add(player.hitboxUp);
@@ -198,6 +198,7 @@ public class Client extends Application {
 		root.getChildren().add(player.getNode());
 	}
 
+	@SuppressWarnings("unused")
 	private void initWorldObjects() {
 		tiles = new List<>();
 		SpriteSheet sprites = null;
@@ -221,12 +222,14 @@ public class Client extends Application {
 		tiles.add(object);
 	}
 
+	@SuppressWarnings("unused")
 	private void visualizeObstacles(Group root) {
 		for (int i = 0; i < tiles.length(); i++) {
 			root.getChildren().add(tiles.get(i).getNode());
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void tick(Group root) {
 		// when window focus is lost, no input shall be proceeded
 		if (!stage.isFocused()) {
@@ -236,7 +239,7 @@ public class Client extends Application {
 		if (frameCounter % 1 == 0) {
 			playerController.checkCollision(tiles);
 			playerController.checkPlayerAnimation();
-			playerController.updatePlayerPosition();
+			//playerController.updatePlayerPosition();
 			playerController.checkPlayerStoppedMoving();
 			playerController.checkInteraction(tiles);
 			for (int i = 0; i < tiles.length(); i++) {
@@ -268,6 +271,7 @@ public class Client extends Application {
 		frameCounter++;
 	}
 
+	@SuppressWarnings("unused")
 	private void endGame() {
 		System.exit(0);
 	}

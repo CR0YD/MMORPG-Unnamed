@@ -6,6 +6,7 @@ public class MapObjectModel {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void processAsObstacle() {
 
 	}

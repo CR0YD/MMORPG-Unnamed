@@ -18,7 +18,9 @@ public class Game {
 	private Scene scene;
 	private Group root;
 
+	@SuppressWarnings("unused")
 	private long prevTime;
+	@SuppressWarnings("unused")
 	private int fps = 0;
 
 	private long frameCounter = 0;
