@@ -237,7 +237,7 @@ public class Client extends Application {
 		}
 		// player movement every frame
 		if (frameCounter % 1 == 0) {
-			playerController.checkCollision(tiles);
+			//playerController.checkCollision(tiles);
 			playerController.checkPlayerAnimation();
 			//playerController.updatePlayerPosition();
 			playerController.checkPlayerStoppedMoving();

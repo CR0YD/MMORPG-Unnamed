@@ -55,6 +55,7 @@ public class Game {
 		}
 		// player movement every frame
 		if (frameCounter % 1 == 0) {
+			playerController.checkCollisionWithObstacle(map.getCurrentField().getObstacles());
 			playerController.checkPlayerAnimation();
 			playerController.updatePlayerPosition(map, scene, root);
 			playerController.checkPlayerStoppedMoving();
@@ -164,7 +165,7 @@ public class Game {
 			player.configureCenter();
 			player.checkPlayerBeforeStart();
 
-			playerController = new PlayerController(player, 1);
+			playerController = new PlayerController(player, 2);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

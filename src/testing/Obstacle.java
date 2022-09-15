@@ -17,6 +17,7 @@ public class Obstacle {
 
 	private Rectangle collisionBox;
 	private ImageView image;
+	private Image sprite;
 	// o -> object; c -> collision
 	private double oX, oY, cX, cY;
 
@@ -65,9 +66,9 @@ public class Obstacle {
 		oY = Integer.parseInt(parameters[1].split(":")[1]);
 		collisionBox = new Rectangle(0, 0, Integer.parseInt(parameters[4].split(":")[1]),
 				Integer.parseInt(parameters[5].split(":")[1]));
-		collisionBox.setTranslateX(Integer.parseInt(parameters[2].split(":")[1]));
+		collisionBox.setTranslateX(oX + Integer.parseInt(parameters[2].split(":")[1]));
 		cX = collisionBox.getTranslateX();
-		collisionBox.setTranslateY(Integer.parseInt(parameters[3].split(":")[1]));
+		collisionBox.setTranslateY(oY + Integer.parseInt(parameters[3].split(":")[1]));
 		cY = collisionBox.getTranslateY();
 	}
 
@@ -96,21 +97,32 @@ public class Obstacle {
 			}
 		}
 
-		Image sprite = new Image(new FileInputStream(newImageFile));
+		sprite = new Image(new FileInputStream(newImageFile));
 		image = new ImageView(sprite);
+		prepareParameter(parameters);
 		image.setTranslateX(Integer.parseInt(parameters[1].split(":")[1]));
 		oX = Integer.parseInt(parameters[1].split(":")[1]);
 		image.setTranslateY(Integer.parseInt(parameters[2].split(":")[1]));
 		oY = Integer.parseInt(parameters[2].split(":")[1]);
-		/*
-		 * collisionBox = new Rectangle(0, 0,
-		 * Integer.parseInt(parameters[6].split(":")[1]),
-		 * Integer.parseInt(parameters[7].split(":")[1]));
-		 * collisionBox.setTranslateX(Integer.parseInt(parameters[4].split(":")[1])); cX
-		 * = collisionBox.getTranslateX();
-		 * collisionBox.setTranslateY(Integer.parseInt(parameters[5].split(":")[1])); cY
-		 * = collisionBox.getTranslateY();
-		 */
+
+		collisionBox = new Rectangle(0, 0, Integer.parseInt(parameters[6].split(":")[1]),
+				Integer.parseInt(parameters[7].split(":")[1]));
+		collisionBox.setTranslateX(oX + Integer.parseInt(parameters[4].split(":")[1]));
+		cX = Integer.parseInt(parameters[4].split(":")[1]);
+		collisionBox.setTranslateY(oY + Integer.parseInt(parameters[5].split(":")[1]));
+		cY = Integer.parseInt(parameters[5].split(":")[1]);
+
+	}
+
+	private String[] prepareParameter(String[] parameters) {
+		for (int i = 0; i < parameters.length; i++) {
+			parameters[i] = parameters[i].replace("sWidth", image.getViewport() == null ? ("" + (int) sprite.getWidth())
+					: ("" + (int) image.getViewport().getWidth()));
+			parameters[i] = parameters[i].replace("sHeight",
+					image.getViewport() == null ? ("" + (int) sprite.getHeight())
+							: ("" + (int) image.getViewport().getHeight()));
+		}
+		return parameters;
 	}
 
 	public void move(double x, double y) {
@@ -123,8 +135,8 @@ public class Obstacle {
 	public void moveTo(double x, double y) {
 		image.setTranslateX(oX + x);
 		image.setTranslateY(oY + y);
-		collisionBox.setTranslateX(cX + x);
-		collisionBox.setTranslateY(cY + y);
+		collisionBox.setTranslateX(oX + cX + x);
+		collisionBox.setTranslateY(oX + cY + y);
 	}
 
 	public Rectangle getCollisionBox() {

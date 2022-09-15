@@ -2,6 +2,8 @@ package testing;
 
 import java.io.IOException;
 
+import javafx.scene.shape.Rectangle;
+
 public class Player extends MapObject {
 
 	public ObjectBox hitboxUp, hitboxDown, hitboxLeft, hitboxRight;
@@ -54,7 +56,32 @@ public class Player extends MapObject {
 		hitboxRight.moveTo(body.getTranslateX(), body.getTranslateY());
 	}
 
-	public boolean isColliding(ObjectBox collidingObjectHitbox, CollisionDirection detecionDirection) {
+//	public boolean isColliding(ObjectBox collidingObjectHitbox, CollisionDirection detecionDirection) {
+//		if (detecionDirection == CollisionDirection.Up
+//				&& collidingObjectHitbox.getBoundsInParent().intersects(hitboxUp.getBoundsInParent())) {
+//			moveTo(body.getTranslateX(), collidingObjectHitbox.getBoundsInParent().getMaxY() - hitboxUp.OFFSET_Y);
+//			return true;
+//		}
+//		if (detecionDirection == CollisionDirection.Down
+//				&& collidingObjectHitbox.getBoundsInParent().intersects(hitboxDown.getBoundsInParent())) {
+//			moveTo(body.getTranslateX(), collidingObjectHitbox.getBoundsInParent().getMinY() - hitboxDown.OFFSET_Y - 1);
+//			return true;
+//		}
+//		if (detecionDirection == CollisionDirection.Left
+//				&& collidingObjectHitbox.getBoundsInParent().intersects(hitboxLeft.getBoundsInParent())) {
+//			moveTo(collidingObjectHitbox.getBoundsInParent().getMaxX() - hitboxLeft.OFFSET_X, body.getTranslateY());
+//			return true;
+//		}
+//		if (detecionDirection == CollisionDirection.Right
+//				&& collidingObjectHitbox.getBoundsInParent().intersects(hitboxRight.getBoundsInParent())) {
+//			moveTo(collidingObjectHitbox.getBoundsInParent().getMinX() - hitboxRight.OFFSET_X - 1,
+//					body.getTranslateY());
+//			return true;
+//		}
+//		return false;
+//	}
+	
+	public boolean isColliding(Rectangle collidingObjectHitbox, CollisionDirection detecionDirection) {
 		if (detecionDirection == CollisionDirection.Up
 				&& collidingObjectHitbox.getBoundsInParent().intersects(hitboxUp.getBoundsInParent())) {
 			moveTo(body.getTranslateX(), collidingObjectHitbox.getBoundsInParent().getMaxY() - hitboxUp.OFFSET_Y);

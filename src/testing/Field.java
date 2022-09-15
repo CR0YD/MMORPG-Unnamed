@@ -84,8 +84,6 @@ public class Field {
 					break;
 				}
 			}
-
-			//System.out.println(OBJECT_MODEL.get(blueprintID)[0]);
 		}
 	}
 	
@@ -100,7 +98,7 @@ public class Field {
 		for (int i = 0; i < objectParameters.length; i++) {
 			allObjectParameters += objectParameters[i] + "qwertzuiop";
 		}
-		allObjectParameters = allObjectParameters.replace("width", "" + WIDTH).replace("height", "" + HEIGHT);
+		allObjectParameters = allObjectParameters.replace("fWidth", "" + WIDTH).replace("fHeight", "" + HEIGHT);
 		return allObjectParameters.split("qwertzuiop");
 	}
 	
