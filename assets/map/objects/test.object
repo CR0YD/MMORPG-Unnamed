@@ -1,3 +1,2 @@
 type:obstacle
-sprite:charsets_12_m-f_complete_by_antifarea_modified.png
-image:[0, 0, 48, 48]
+animation:aParam(32, 32); idle((4-3),(5-3), (6-3), (7-3), (7-3), (7-3))

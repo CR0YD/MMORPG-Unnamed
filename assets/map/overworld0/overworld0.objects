@@ -2,4 +2,5 @@ border(x:0, y:21, cX:0, cY:0, cW:fWidth, cH:5);
 border(x:0, y:fHeight, cX:0, cY:0, cW:fWidth, cH:5);
 border(x:-5, y:0, cX:0, cY:0, cW:5, cH:fHeight);
 border(x:fWidth, y:0, cX:0, cY:0, cW:5, cH:fHeight);
-test(x:50, y:50, scale:1, cX:0, cY:0, cW:sWidth, cH:sHeight);
+test(x:50, y:100, scale:1);
+test(x:82, y:100, scale:1);

@@ -3,12 +3,12 @@ package testing;
 import finished.List;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import testing.Player.CollisionDirection;
 
 public class PlayerController {
 
-	private boolean up, down, left, right, collisionUp, collisionDown, collisionLeft, collisionRight = false;
+	private boolean up, down, left, right, collisionUp, collisionDown, collisionLeft, collisionRight;
 	private double playerX, playerY, playerSpeed;
+	@SuppressWarnings("unused")
 	private boolean wantsToInteract;
 
 	private Player player;
@@ -21,7 +21,7 @@ public class PlayerController {
 	public PlayerController(Player player, double playerSpeed) {
 		this.player = player;
 		this.playerSpeed = playerSpeed;
-		playerX = this.player.getX();
+		playerX = this.player.getY();
 		playerY = this.player.getY();
 		currentPlayerDirection = PlayerFacingDirection.DOWN;
 	}
@@ -67,7 +67,8 @@ public class PlayerController {
 		if (up && !down && right && !left && !collisionUp && !collisionRight) {
 			player.move((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1),
 					(int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX() && player.getX() > scene.getWidth() / 2) {
+			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX()
+					&& player.getX() > scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
 			}
 			if (0 > root.getTranslateY() && player.getY() < map.getCurrentField().HEIGHT - scene.getHeight() / 2) {
@@ -80,17 +81,20 @@ public class PlayerController {
 			if (0 > root.getTranslateX() && player.getX() < map.getCurrentField().WIDTH - scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
 			}
-			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY() && player.getY() > scene.getHeight() / 2) {
+			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY()
+					&& player.getY() > scene.getHeight() / 2) {
 				root.setTranslateY(root.getTranslateY() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
 			}
 		}
 		if (down && !up && right && !left && !collisionDown && !collisionRight) {
 			player.move((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1),
 					(int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX() && player.getX() > scene.getWidth() / 2) {
+			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX()
+					&& player.getX() > scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
 			}
-			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY() && player.getY() > scene.getHeight() / 2) {
+			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY()
+					&& player.getY() > scene.getHeight() / 2) {
 				root.setTranslateY(root.getTranslateY() + (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
 			}
 		}
@@ -106,7 +110,8 @@ public class PlayerController {
 				&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 				&& !collisionDown) {
 			player.move(0, playerSpeed);
-			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY() && player.getY() > scene.getHeight() / 2) {
+			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY()
+					&& player.getY() > scene.getHeight() / 2) {
 				root.setTranslateY(root.getTranslateY() - playerSpeed);
 			}
 		}
@@ -120,7 +125,8 @@ public class PlayerController {
 		if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 				&& !collisionRight) {
 			player.move(playerSpeed, 0);
-			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX() && player.getX() > scene.getWidth() / 2) {
+			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX()
+					&& player.getX() > scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() - playerSpeed);
 			}
 		}
@@ -132,248 +138,233 @@ public class PlayerController {
 
 	public void checkPlayerStoppedMoving() {
 		if (player.getX() == playerX && player.getY() == playerY
-				&& (player.getCurrentFrameIdx() == 1 || player.getCurrentFrameIdx() == 3)
+				&& (player.getVisualizer().getCurrentFrameIdx() == 1
+						|| player.getVisualizer().getCurrentFrameIdx() == 3)
 				&& ((!up && !down && !left && !right) || ((up && down) && !(left || right))
 						|| ((left && right) && !(up || down)))) {
 			if (currentPlayerDirection == PlayerFacingDirection.UP
-					&& !player.getCurrentAnimationName().equals("IDLE_UP")) {
-				player.changeAnimationTo("IDLE_UP");
+					&& !player.getVisualizer().getCurrentAnimationName().equals("IDLE_UP")) {
+				player.getVisualizer().setCurrentAnimation("IDLE_UP");
 			}
 			if (currentPlayerDirection == PlayerFacingDirection.DOWN
-					&& !player.getCurrentAnimationName().equals("IDLE_DOWN")) {
-				player.changeAnimationTo("IDLE_DOWN");
+					&& !player.getVisualizer().getCurrentAnimationName().equals("IDLE_DOWN")) {
+				player.getVisualizer().setCurrentAnimation("IDLE_DOWN");
 			}
 			if (currentPlayerDirection == PlayerFacingDirection.LEFT
-					&& !player.getCurrentAnimationName().equals("IDLE_LEFT")) {
-				player.changeAnimationTo("IDLE_LEFT");
+					&& !player.getVisualizer().getCurrentAnimationName().equals("IDLE_LEFT")) {
+				player.getVisualizer().setCurrentAnimation("IDLE_LEFT");
 			}
 			if (currentPlayerDirection == PlayerFacingDirection.RIGHT
-					&& !player.getCurrentAnimationName().equals("IDLE_RIGHT")) {
-				player.changeAnimationTo("IDLE_RIGHT");
+					&& !player.getVisualizer().getCurrentAnimationName().equals("IDLE_RIGHT")) {
+				player.getVisualizer().setCurrentAnimation("IDLE_RIGHT");
 			}
 		}
 		playerX = player.getX();
 		playerY = player.getY();
 	}
 
-//	public void checkCollision(List<MapObstacle> obstacles) {
-//		for (int i = 0; i < obstacles.length(); i++) {
-//			if (!obstacles.get(i).hasCollision()) {
-//				continue;
-//			}
-//			if (up && !down && left && !right && !collisionUp && !collisionLeft) {
-//				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Up)) {
-//					collisionUp = true;
-//				}
-//				player.alignHitbox();
-//				player.moveHitbox((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1), 0);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Left)) {
-//					collisionLeft = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (up && !down && right && !left && !collisionUp && !collisionRight) {
-//				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Up)) {
-//					collisionUp = true;
-//				}
-//				player.alignHitbox();
-//				player.moveHitbox((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1), 0);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Right)) {
-//					collisionRight = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (down && !up && left && !right && !collisionDown && !collisionLeft) {
-//				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Down)) {
-//					collisionDown = true;
-//				}
-//				player.alignHitbox();
-//				player.moveHitbox((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1), 0);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Left)) {
-//					collisionLeft = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (down && !up && right && !left && !collisionDown && !collisionRight) {
-//				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Down)) {
-//					collisionDown = true;
-//				}
-//				player.alignHitbox();
-//				player.moveHitbox((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1), 0);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Right)) {
-//					collisionRight = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (up && !down
-//					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
-//					&& !collisionUp) {
-//				player.moveHitbox(0, -playerSpeed);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Up)) {
-//					collisionUp = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (down && !up
-//					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
-//					&& !collisionDown) {
-//				player.moveHitbox(0, playerSpeed);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Down)) {
-//					collisionDown = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (left && !right && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
-//					&& !collisionLeft) {
-//				player.moveHitbox(-playerSpeed, 0);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Left)) {
-//					collisionLeft = true;
-//				}
-//				player.alignHitbox();
-//			}
-//			if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
-//					&& !collisionRight) {
-//				player.moveHitbox(playerSpeed, 0);
-//				if (player.isColliding(obstacles.get(i).getHitbox(), CollisionDirection.Right)) {
-//					collisionRight = true;
-//				}
-//				player.alignHitbox();
-//			}
-//		}
-//	}
-	
 	public void checkCollisionWithObstacle(List<Obstacle> obstacles) {
 		for (int i = 0; i < obstacles.length(); i++) {
 			if (up && !down && left && !right && !collisionUp && !collisionLeft) {
-				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Up)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth() >= obstacles.get(i)
+						.getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() - playerSpeed >= obstacles.get(i).getCollisionBox()
+								.getTranslateY()
+						&& player.getCollisionBox().getTranslateY() - playerSpeed <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionUp = true;
+					player.moveFromCollisionBoxTo(player.getCollisionBox().getTranslateX(), obstacles.get(i).getCollisionBox().getTranslateY()
+							+ obstacles.get(i).getCollisionBox().getHeight() + 1);
 				}
-				player.alignHitbox();
-				player.moveHitbox((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1), 0);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Left)) {
+				if (player.getCollisionBox().getTranslateX() - playerSpeed >= obstacles.get(i).getCollisionBox()
+						.getTranslateX()
+						&& player.getCollisionBox().getTranslateX() - playerSpeed <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight() >= obstacles
+								.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionLeft = true;
+					player.moveFromCollisionBoxTo(obstacles.get(i).getCollisionBox().getTranslateX()
+							+ obstacles.get(i).getCollisionBox().getWidth() + 1, player.getCollisionBox().getTranslateY());
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (up && !down && right && !left && !collisionUp && !collisionRight) {
-				player.moveHitbox(0, (int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1));
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Up)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth() >= obstacles.get(i)
+						.getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() - playerSpeed >= obstacles.get(i).getCollisionBox()
+								.getTranslateY()
+						&& player.getCollisionBox().getTranslateY() - playerSpeed <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionUp = true;
+					player.moveFromCollisionBoxTo(player.getCollisionBox().getTranslateX(), obstacles.get(i).getCollisionBox().getTranslateY()
+							+ obstacles.get(i).getCollisionBox().getHeight() + 1);
 				}
-				player.alignHitbox();
-				player.moveHitbox((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1), 0);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Right)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth()
+						+ playerSpeed >= obstacles.get(i).getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth()
+								+ playerSpeed <= obstacles.get(i).getCollisionBox().getTranslateX()
+										+ obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight() >= obstacles
+								.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionRight = true;
+					player.moveFromCollisionBoxTo(obstacles.get(i).getCollisionBox().getTranslateX()
+							- player.getCollisionBox().getWidth() - 1, player.getCollisionBox().getTranslateY());
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (down && !up && left && !right && !collisionDown && !collisionLeft) {
-				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Down)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth() >= obstacles.get(i)
+						.getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight()
+								+ playerSpeed >= obstacles.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight()
+								+ playerSpeed <= obstacles.get(i).getCollisionBox().getTranslateY()
+										+ obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionDown = true;
+					player.moveFromCollisionBoxTo(player.getCollisionBox().getTranslateX(), obstacles.get(i).getCollisionBox().getTranslateY()
+							- player.getCollisionBox().getHeight() - 1);
 				}
-				player.alignHitbox();
-				player.moveHitbox((int) (-Math.sqrt(Math.pow(playerSpeed, 2) / 2) - 1), 0);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Left)) {
+				if (player.getCollisionBox().getTranslateX() - playerSpeed >= obstacles.get(i).getCollisionBox()
+						.getTranslateX()
+						&& player.getCollisionBox().getTranslateX() - playerSpeed <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight() >= obstacles
+								.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionLeft = true;
+					player.moveFromCollisionBoxTo(obstacles.get(i).getCollisionBox().getTranslateX()
+							+ obstacles.get(i).getCollisionBox().getWidth() + 1, player.getCollisionBox().getTranslateY());
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (down && !up && right && !left && !collisionDown && !collisionRight) {
-				player.moveHitbox(0, (int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1));
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Down)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth() >= obstacles.get(i)
+						.getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight()
+								+ playerSpeed >= obstacles.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight()
+								+ playerSpeed <= obstacles.get(i).getCollisionBox().getTranslateY()
+										+ obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionDown = true;
+					player.moveFromCollisionBoxTo(player.getCollisionBox().getTranslateX(), obstacles.get(i).getCollisionBox().getTranslateY()
+							- player.getCollisionBox().getHeight() - 1);
 				}
-				player.alignHitbox();
-				player.moveHitbox((int) (Math.sqrt(Math.pow(playerSpeed, 2) / 2) + 1), 0);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Right)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth()
+						+ playerSpeed >= obstacles.get(i).getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth()
+								+ playerSpeed <= obstacles.get(i).getCollisionBox().getTranslateX()
+										+ obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight() >= obstacles
+								.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionRight = true;
+					player.moveFromCollisionBoxTo(obstacles.get(i).getCollisionBox().getTranslateX()
+							- player.getCollisionBox().getWidth() - 1, player.getCollisionBox().getTranslateY());
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (up && !down
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 					&& !collisionUp) {
-				player.moveHitbox(0, -playerSpeed);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Up)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth() >= obstacles.get(i)
+						.getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() - playerSpeed >= obstacles.get(i).getCollisionBox()
+								.getTranslateY()
+						&& player.getCollisionBox().getTranslateY() - playerSpeed <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionUp = true;
+					player.moveFromCollisionBoxTo(player.getCollisionBox().getTranslateX(), obstacles.get(i).getCollisionBox().getTranslateY()
+							+ obstacles.get(i).getCollisionBox().getHeight() + 1);
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (down && !up
 					&& ((left && collisionLeft) || (right && collisionRight) || (!(left || right) || (left && right)))
 					&& !collisionDown) {
-				player.moveHitbox(0, playerSpeed);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Down)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth() >= obstacles.get(i)
+						.getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight()
+								+ playerSpeed >= obstacles.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight()
+								+ playerSpeed <= obstacles.get(i).getCollisionBox().getTranslateY()
+										+ obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionDown = true;
+					player.moveFromCollisionBoxTo(player.getCollisionBox().getTranslateX(), obstacles.get(i).getCollisionBox().getTranslateY()
+							- player.getCollisionBox().getHeight() - 1);
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (left && !right && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionLeft) {
-				player.moveHitbox(-playerSpeed, 0);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Left)) {
+				if (player.getCollisionBox().getTranslateX() - playerSpeed >= obstacles.get(i).getCollisionBox()
+						.getTranslateX()
+						&& player.getCollisionBox().getTranslateX() - playerSpeed <= obstacles.get(i).getCollisionBox()
+								.getTranslateX() + obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight() >= obstacles
+								.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionLeft = true;
+					player.moveFromCollisionBoxTo(obstacles.get(i).getCollisionBox().getTranslateX()
+							+ obstacles.get(i).getCollisionBox().getWidth() + 1, player.getCollisionBox().getTranslateY());
 				}
-				player.alignHitbox();
+				continue;
 			}
 			if (right && !left && ((up && collisionUp) || (down && collisionDown) || (!(up || down) || (up && down)))
 					&& !collisionRight) {
-				player.moveHitbox(playerSpeed, 0);
-				if (player.isColliding(obstacles.get(i).getCollisionBox(), CollisionDirection.Right)) {
+				if (player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth()
+						+ playerSpeed >= obstacles.get(i).getCollisionBox().getTranslateX()
+						&& player.getCollisionBox().getTranslateX() + player.getCollisionBox().getWidth()
+								+ playerSpeed <= obstacles.get(i).getCollisionBox().getTranslateX()
+										+ obstacles.get(i).getCollisionBox().getWidth()
+						&& player.getCollisionBox().getTranslateY() + player.getCollisionBox().getHeight() >= obstacles
+								.get(i).getCollisionBox().getTranslateY()
+						&& player.getCollisionBox().getTranslateY() <= obstacles.get(i).getCollisionBox()
+								.getTranslateY() + obstacles.get(i).getCollisionBox().getHeight()) {
 					collisionRight = true;
+					player.moveFromCollisionBoxTo(obstacles.get(i).getCollisionBox().getTranslateX()
+							- player.getCollisionBox().getWidth() - 1, player.getCollisionBox().getTranslateY());
 				}
-				player.alignHitbox();
-			}
-		}
-	}
-
-	public void checkInteraction(List<MapObstacle> tiles) {
-		if (!wantsToInteract) {
-			return;
-		}
-		for (int i = 0; i < tiles.length(); i++) {
-			if (!tiles.get(i).isInteractable()) {
 				continue;
 			}
-			if (player.getCenter().getX()
-					- tiles.get(i).getCenter().getX() >= -tiles.get(i).getMinInteractionDistanceX()
-					&& player.getCenter().getX() - tiles.get(i).getCenter().getX() <= tiles.get(i)
-							.getMaxInteractionDistanceX()
-					&& player.getCenter().getY()
-							- tiles.get(i).getCenter().getY() >= -tiles.get(i).getMinInteractionDistanceY()
-					&& player.getCenter().getY() - tiles.get(i).getCenter().getY() <= tiles.get(i)
-							.getMaxInteractionDistanceY()) {
-				tiles.get(i).onInteraction();
-				wantsToInteract = false;
-				return;
-			}
 		}
-		wantsToInteract = false;
 	}
 
 	public void checkPlayerAnimation() {
 		if (up && (!(down || left || right) || (!down && left && right))
-				&& !player.getCurrentAnimationName().equals("MOVE_UP")) {
-			player.changeAnimationTo("MOVE_UP");
+				&& !player.getVisualizer().getCurrentAnimationName().equals("MOVE_UP")) {
+			player.getVisualizer().setCurrentAnimation("MOVE_UP");
 			currentPlayerDirection = PlayerFacingDirection.UP;
 		}
 		if (down && (!(up || left || right) || (!up && left && right))
-				&& !player.getCurrentAnimationName().equals("MOVE_DOWN")) {
-			player.changeAnimationTo("MOVE_DOWN");
+				&& !player.getVisualizer().getCurrentAnimationName().equals("MOVE_DOWN")) {
+			player.getVisualizer().setCurrentAnimation("MOVE_DOWN");
 			currentPlayerDirection = PlayerFacingDirection.DOWN;
 		}
-		if (left && !right && !player.getCurrentAnimationName().equals("MOVE_LEFT")) {
-			player.changeAnimationTo("MOVE_LEFT");
+		if (left && !right && !player.getVisualizer().getCurrentAnimationName().equals("MOVE_LEFT")) {
+			player.getVisualizer().setCurrentAnimation("MOVE_LEFT");
 			currentPlayerDirection = PlayerFacingDirection.LEFT;
 		}
-		if (right && !left && !player.getCurrentAnimationName().equals("MOVE_RIGHT")) {
-			player.changeAnimationTo("MOVE_RIGHT");
+		if (right && !left && !player.getVisualizer().getCurrentAnimationName().equals("MOVE_RIGHT")) {
+			player.getVisualizer().setCurrentAnimation("MOVE_RIGHT");
 			currentPlayerDirection = PlayerFacingDirection.RIGHT;
 		}
 	}

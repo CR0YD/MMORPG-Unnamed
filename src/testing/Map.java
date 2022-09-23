@@ -38,7 +38,7 @@ public class Map {
 				root.getChildren().add(i,FIELDS.get(currentFieldIdx).CHUNKS.get(i).BODY);
 			}
 			for (int i = 0; i < FIELDS.get(currentFieldIdx).getObstacles().length(); i++) {
-				root.getChildren().add(FIELDS.get(currentFieldIdx).getObstacles().get(i).getImageView());
+				root.getChildren().add(FIELDS.get(currentFieldIdx).getObstacles().get(i).getVisualizer().getImageView());
 			}
 			if (FIELDS.get(currentFieldIdx).WIDTH < stage.getWidth()) {
 				moveField((stage.getWidth() - FIELDS.get(currentFieldIdx).WIDTH) / 2, 0);

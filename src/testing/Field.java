@@ -71,12 +71,12 @@ public class Field {
 				System.err.println("There is no object named '" + objectName + "'.");
 				continue;
 			}
-
+			
 			for (int j = 0; j < OBJECT_MODEL.get(blueprintID).length; j++) {
 				if (OBJECT_MODEL.get(blueprintID)[j].split(":")[0].equals("type")) {
 					if (OBJECT_MODEL.get(blueprintID)[j].split(":")[1].equals("obstacle")) {
 						try {
-							obstacles.add(new Obstacle(connectArrays(blueprintID, objectParameters)));
+							obstacles.add(ObstacleCreator.createObstacle(connectArrays(blueprintID, objectParameters)));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

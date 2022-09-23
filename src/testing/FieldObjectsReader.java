@@ -22,10 +22,10 @@ public class FieldObjectsReader {
 		}
 		String objects = "";
 		while (scan.hasNextLine()) {
-			objects += scan.nextLine().trim().replace(" ", "") + "qwertzuiop";
+			objects += scan.nextLine().trim().replace(" ", "");
 		}
 		scan.close();
-		return objects.split("qwertzuiop");
+		return objects.split(";");
 	}
 	
 }

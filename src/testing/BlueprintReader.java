@@ -30,6 +30,9 @@ public class BlueprintReader {
 					}
 					blueprintString += processingString + "qwertzuiop";
 				}
+				if (!blueprintString.contains("sprite")) {
+					blueprintString += "sprite:" + path + "/" + objectFiles[i].getName().replace(".object", "") + ".png";
+				}
 				modelObjects.add(blueprintString.split("qwertzuiop"));
 				scan.close();
 			} catch (Exception e) {

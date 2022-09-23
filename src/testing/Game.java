@@ -1,12 +1,17 @@
 package testing;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Game {
@@ -37,11 +42,11 @@ public class Game {
 
 		initPlayer();
 		initEventHandler();
-		this.root.getChildren().add(player.getNode());
+		this.root.getChildren().add(player.getVisualizer().getImageView());
 	}
 
 	public void tick(Group root) {
-		//fps counter
+		// fps counter
 //		if (System.currentTimeMillis() - prevTime >= 1000) {
 //			prevTime = System.currentTimeMillis();
 //			System.out.println("FPS: " + fps);
@@ -62,7 +67,13 @@ public class Game {
 		}
 		// basic animation: every tenth frame, move frame by one
 		if (frameCounter % 10 == 0) {
-			player.nextAnimationFrame();
+			player.getVisualizer().nextAnimationFrame();
+			for (int i = 0; i < map.getCurrentField().getObstacles().length(); i++) {
+				if (!map.getCurrentField().getObstacles().get(i).hasAnimation()) {
+					continue;
+				}
+				map.getCurrentField().getObstacles().get(i).getVisualizer().nextAnimationFrame();
+			}
 		}
 		// incrementing frameCounter
 		frameCounter++;
@@ -122,48 +133,42 @@ public class Game {
 
 	private void initPlayer() {
 		try {
-			SpriteSheet sprites = new SpriteSheet("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png",
-					32, 36);
-			Animator animator = new Animator(sprites);
-			animator.addAnimation("IDLE_UP");
-			animator.addFrameToAnimation("IDLE_UP", 1, 0);
-			animator.addAnimation("MOVE_UP");
-			animator.addFrameToAnimation("MOVE_UP", 0, 0);
-			animator.addFrameToAnimation("MOVE_UP", 1, 0);
-			animator.addFrameToAnimation("MOVE_UP", 2, 0);
-			animator.addFrameToAnimation("MOVE_UP", 1, 0);
-			animator.addAnimation("IDLE_DOWN");
-			animator.addFrameToAnimation("IDLE_DOWN", 1, 2);
-			animator.addAnimation("MOVE_DOWN");
-			animator.addFrameToAnimation("MOVE_DOWN", 0, 2);
-			animator.addFrameToAnimation("MOVE_DOWN", 1, 2);
-			animator.addFrameToAnimation("MOVE_DOWN", 2, 2);
-			animator.addFrameToAnimation("MOVE_DOWN", 1, 2);
-			animator.addAnimation("IDLE_LEFT");
-			animator.addFrameToAnimation("IDLE_LEFT", 1, 3);
-			animator.addAnimation("MOVE_LEFT");
-			animator.addFrameToAnimation("MOVE_LEFT", 0, 3);
-			animator.addFrameToAnimation("MOVE_LEFT", 1, 3);
-			animator.addFrameToAnimation("MOVE_LEFT", 2, 3);
-			animator.addFrameToAnimation("MOVE_LEFT", 1, 3);
-			animator.addAnimation("IDLE_RIGHT");
-			animator.addFrameToAnimation("IDLE_RIGHT", 1, 1);
-			animator.addAnimation("MOVE_RIGHT");
-			animator.addFrameToAnimation("MOVE_RIGHT", 0, 1);
-			animator.addFrameToAnimation("MOVE_RIGHT", 1, 1);
-			animator.addFrameToAnimation("MOVE_RIGHT", 2, 1);
-			animator.addFrameToAnimation("MOVE_RIGHT", 1, 1);
+			ImageView imageView = new ImageView(new Image(new FileInputStream(new File("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png"))));
+			Visualizer visualizer = new Visualizer(imageView, 32, 36);
+			visualizer.addAnimation("IDLE_UP");
+			visualizer.addFrameToAnimation("IDLE_UP", 1, 0);
+			visualizer.addAnimation("MOVE_UP");
+			visualizer.addFrameToAnimation("MOVE_UP", 0, 0);
+			visualizer.addFrameToAnimation("MOVE_UP", 1, 0);
+			visualizer.addFrameToAnimation("MOVE_UP", 2, 0);
+			visualizer.addFrameToAnimation("MOVE_UP", 1, 0);
+			visualizer.addAnimation("IDLE_DOWN");
+			visualizer.addFrameToAnimation("IDLE_DOWN", 1, 2);
+			visualizer.addAnimation("MOVE_DOWN");
+			visualizer.addFrameToAnimation("MOVE_DOWN", 0, 2);
+			visualizer.addFrameToAnimation("MOVE_DOWN", 1, 2);
+			visualizer.addFrameToAnimation("MOVE_DOWN", 2, 2);
+			visualizer.addFrameToAnimation("MOVE_DOWN", 1, 2);
+			visualizer.addAnimation("IDLE_LEFT");
+			visualizer.addFrameToAnimation("IDLE_LEFT", 1, 3);
+			visualizer.addAnimation("MOVE_LEFT");
+			visualizer.addFrameToAnimation("MOVE_LEFT", 0, 3);
+			visualizer.addFrameToAnimation("MOVE_LEFT", 1, 3);
+			visualizer.addFrameToAnimation("MOVE_LEFT", 2, 3);
+			visualizer.addFrameToAnimation("MOVE_LEFT", 1, 3);
+			visualizer.addAnimation("IDLE_RIGHT");
+			visualizer.addFrameToAnimation("IDLE_RIGHT", 1, 1);
+			visualizer.addAnimation("MOVE_RIGHT");
+			visualizer.addFrameToAnimation("MOVE_RIGHT", 0, 1);
+			visualizer.addFrameToAnimation("MOVE_RIGHT", 1, 1);
+			visualizer.addFrameToAnimation("MOVE_RIGHT", 2, 1);
+			visualizer.addFrameToAnimation("MOVE_RIGHT", 1, 1);
 
-			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2), sprites.COLUMN_WIDTH,
-					sprites.ROW_HEIGHT, animator);
-
-			player.addHitboxUp(2, player.getHeight() - 10, sprites.COLUMN_WIDTH - 6, 1);
-			player.addHitboxDown(2, player.getHeight(), sprites.COLUMN_WIDTH - 6, 1);
-			player.addHitboxLeft(1, player.getHeight() - 9, 1, 9);
-			player.addHitboxRight(player.getWidth() - 4, player.getHeight() - 9, 1, 9);
-
-			player.configureCenter();
-			player.checkPlayerBeforeStart();
+			Rectangle rect = new Rectangle(0, 0, 30, 14);
+			rect.setTranslateX(0);
+			rect.setTranslateY(25);
+			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2),
+					visualizer, rect);
 
 			playerController = new PlayerController(player, 2);
 		} catch (IOException e) {
