@@ -19,6 +19,9 @@ public class BlueprintReader {
 		List<String[]> modelObjects = new List<>();
 		String blueprintString = "";
 		for (int i = 0; i < objectFiles.length; i++) {
+			if (!objectFiles[i].getName().endsWith(".object")) {
+				continue;
+			}
 			try {
 				blueprintString = "name:" + objectFiles[i].getName().split(".object")[0] + "qwertzuiop";
 				scan = new Scanner(objectFiles[i]);

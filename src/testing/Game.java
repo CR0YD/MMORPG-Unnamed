@@ -133,42 +133,10 @@ public class Game {
 
 	private void initPlayer() {
 		try {
-			ImageView imageView = new ImageView(new Image(new FileInputStream(new File("assets/sprites/charsets_12_m-f_complete_by_antifarea_modified.png"))));
-			Visualizer visualizer = new Visualizer(imageView, 32, 36);
-			visualizer.addAnimation("IDLE_UP");
-			visualizer.addFrameToAnimation("IDLE_UP", 1, 0);
-			visualizer.addAnimation("MOVE_UP");
-			visualizer.addFrameToAnimation("MOVE_UP", 0, 0);
-			visualizer.addFrameToAnimation("MOVE_UP", 1, 0);
-			visualizer.addFrameToAnimation("MOVE_UP", 2, 0);
-			visualizer.addFrameToAnimation("MOVE_UP", 1, 0);
-			visualizer.addAnimation("IDLE_DOWN");
-			visualizer.addFrameToAnimation("IDLE_DOWN", 1, 2);
-			visualizer.addAnimation("MOVE_DOWN");
-			visualizer.addFrameToAnimation("MOVE_DOWN", 0, 2);
-			visualizer.addFrameToAnimation("MOVE_DOWN", 1, 2);
-			visualizer.addFrameToAnimation("MOVE_DOWN", 2, 2);
-			visualizer.addFrameToAnimation("MOVE_DOWN", 1, 2);
-			visualizer.addAnimation("IDLE_LEFT");
-			visualizer.addFrameToAnimation("IDLE_LEFT", 1, 3);
-			visualizer.addAnimation("MOVE_LEFT");
-			visualizer.addFrameToAnimation("MOVE_LEFT", 0, 3);
-			visualizer.addFrameToAnimation("MOVE_LEFT", 1, 3);
-			visualizer.addFrameToAnimation("MOVE_LEFT", 2, 3);
-			visualizer.addFrameToAnimation("MOVE_LEFT", 1, 3);
-			visualizer.addAnimation("IDLE_RIGHT");
-			visualizer.addFrameToAnimation("IDLE_RIGHT", 1, 1);
-			visualizer.addAnimation("MOVE_RIGHT");
-			visualizer.addFrameToAnimation("MOVE_RIGHT", 0, 1);
-			visualizer.addFrameToAnimation("MOVE_RIGHT", 1, 1);
-			visualizer.addFrameToAnimation("MOVE_RIGHT", 2, 1);
-			visualizer.addFrameToAnimation("MOVE_RIGHT", 1, 1);
+			Character character = CharacterCreator.createObstacle(new CharacterReader("assets/map/objects").read().get(0));
 
-			Rectangle rect = new Rectangle(0, 0, 30, 14);
-			rect.setTranslateX(0);
-			rect.setTranslateY(25);
-			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2),
-					visualizer, rect);
+			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2), character.getVisualizer(),
+					character.getCollisionBox());
 
 			playerController = new PlayerController(player, 2);
 		} catch (IOException e) {

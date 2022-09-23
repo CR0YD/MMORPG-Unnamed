@@ -11,27 +11,23 @@ import javax.imageio.ImageIO;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class ObstacleCreator {
+public class CharacterCreator {
 
 	private static Image sprite;
 	private static ImageView imageView;
 	private static Rectangle collisionBox;
 	private static Visualizer visualizer;
 
-	private static String x, y, cX, cY, cW, cH, spritePath, scale, animation;
+	private static String collisionBoxMeasures, spritePath, scale, animation;
 
-	public static Obstacle createObstacle(String[] parameters) throws IOException {
+	public static Character createObstacle(String[] parameters) throws IOException {
 		resetAttributes();
 		for (int i = 0; i < parameters.length; i++) {
 			switch (parameters[i].split(":")[0]) {
-			case "x" -> x = parameters[i].split(":")[1];
-			case "y" -> y = parameters[i].split(":")[1];
-			case "cX" -> cX = parameters[i].split(":")[1];
-			case "cY" -> cY = parameters[i].split(":")[1];
-			case "cW" -> cW = parameters[i].split(":")[1];
-			case "cH" -> cH = parameters[i].split(":")[1];
+			case "collisionBox" -> collisionBoxMeasures = parameters[i].split(":")[1];
 			case "sprite" -> spritePath = parameters[i].split(":")[1];
 			case "scale" -> scale = parameters[i].split(":")[1];
 			case "animation" -> animation = parameters[i].substring(parameters[i].indexOf(":") + 1);
@@ -41,21 +37,15 @@ public class ObstacleCreator {
 		}
 		processSprite();
 		processVisualization();
-		processImageViewCoordinates();
 		processHitboxValues();
-		return new Obstacle(visualizer, collisionBox);
+		return new Character(visualizer, collisionBox);
 	}
 
 	private static void resetAttributes() {
 		collisionBox = null;
 		imageView = null;
 		sprite = null;
-		x = "";
-		y = "";
-		cX = "";
-		cY = "";
-		cW = "";
-		cH = "";
+		collisionBoxMeasures = "";
 		spritePath = "";
 		scale = "";
 		animation = "";
@@ -102,37 +92,35 @@ public class ObstacleCreator {
 		return newImageFile;
 	}
 
-	private static void processImageViewCoordinates() {
-		if (!x.equals("")) {
-			imageView.setTranslateX(Integer.parseInt(x));
-		}
-		if (!y.equals("")) {
-			imageView.setTranslateY(Integer.parseInt(y));
-		}
-	}
-
 	private static void processHitboxValues() {
-		collisionBox = new Rectangle();
-		collisionBox.setTranslateX(imageView.getTranslateX());
-		if (!cX.equals("")) {
-			collisionBox.setTranslateX(imageView.getTranslateX() + Integer.parseInt(cX));
+		collisionBox = new Rectangle(0, 0, 0, 0);
+		String[] collisionBoxMeasuresArr = collisionBoxMeasures.split(",");
+		if (collisionBoxMeasuresArr.length > 4 || collisionBoxMeasuresArr.length == 0) {
+			return;
 		}
-		collisionBox.setTranslateY(imageView.getTranslateY());
-		if (!cY.equals("")) {
-			collisionBox.setTranslateY(imageView.getTranslateY() + Integer.parseInt(cY));
+		double scalingFactor = 1;
+		if (!scale.equals("")) {
+			scalingFactor = Double.parseDouble(scale);
 		}
-		if (!cW.equals("") && !cW.equals("sWidth")) {
-			collisionBox.setWidth(Integer.parseInt(cW));
+		collisionBox.setTranslateX(Integer.parseInt(collisionBoxMeasuresArr[0]) * scalingFactor);
+		collisionBox.setTranslateY(Integer.parseInt(collisionBoxMeasuresArr[1]) * scalingFactor);
+		try {
+			collisionBox.setWidth(Integer.parseInt(collisionBoxMeasuresArr[2]) * scalingFactor);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (collisionBoxMeasuresArr[2].equals("sWidth")) {
+				collisionBox.setWidth(imageView.getViewport().getWidth() * scalingFactor);
+			}
 		}
-		if ((cW.equals("") || cW.equals("sWidth")) && sprite != null) {
-			collisionBox.setWidth(imageView.getViewport().getWidth());
+		try {
+			collisionBox.setHeight(Integer.parseInt(collisionBoxMeasuresArr[3]) * scalingFactor);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (collisionBoxMeasuresArr[3].equals("sHeight")) {
+				collisionBox.setHeight(imageView.getViewport().getHeight() * scalingFactor);
+			}
 		}
-		if (!cH.equals("") && !cH.equals("sHeight")) {
-			collisionBox.setHeight(Integer.parseInt(cH));
-		}
-		if ((cH.equals("") || cH.equals("sHeight")) && sprite != null) {
-			collisionBox.setHeight(imageView.getViewport().getHeight());
-		}
+		System.out.println(collisionBox);
 	}
 
 	private static void processVisualization() {
@@ -164,8 +152,7 @@ public class ObstacleCreator {
 					.substring(animationParameterArr[i].indexOf("(") + 1, animationParameterArr[i].length() - 1)
 					.split(",");
 			for (int j = 0; j < animationArr.length; j++) {
-				visualizer.addFrameToAnimation(animationName,
-						Integer.parseInt(animationArr[j].split("-")[0]),
+				visualizer.addFrameToAnimation(animationName, Integer.parseInt(animationArr[j].split("-")[0]),
 						Integer.parseInt(animationArr[j].split("-")[1]));
 			}
 		}
