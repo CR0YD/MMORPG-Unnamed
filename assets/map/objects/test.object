@@ -1,2 +1,2 @@
 type:obstacle
-animation:aParam(32, 32); idle((4-3),(5-3), (6-3), (7-3), (7-3), (7-3))
+animation:aParam(32, 32); idle(4-3, 5-3, 6-3, 7-3, 7-3, 7-3)
