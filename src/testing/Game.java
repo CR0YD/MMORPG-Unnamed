@@ -1,17 +1,13 @@
 package testing;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
+import finished.List;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Game {
@@ -23,6 +19,8 @@ public class Game {
 	private Scene scene;
 	private Group root;
 
+	private List<ObjectModel> objectModels;
+	
 	@SuppressWarnings("unused")
 	private long prevTime;
 	@SuppressWarnings("unused")
@@ -36,8 +34,10 @@ public class Game {
 		this.stage = stage;
 		this.scene = scene;
 		this.root = root;
+		
+		objectModels = ObjectFilesReader.read("assets/map/objects");
 
-		map = new Map();
+		map = new Map(objectModels);
 		map.switchFieldTo(0, root, stage);
 
 		initPlayer();
@@ -133,10 +133,15 @@ public class Game {
 
 	private void initPlayer() {
 		try {
-			Character character = CharacterCreator.createObstacle(new CharacterReader("assets/map/objects").read().get(0));
+			Character character = null;
+			for (int i = 0; i < objectModels.length(); i++) {
+				if (objectModels.get(i).TYPE.equals("character")) {
+					character = CharacterCreator.createCharactr(objectModels.get(i).PARAMETERS);
+				}
+			}
 
-			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2), character.getVisualizer(),
-					character.getCollisionBox());
+			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2),
+					character.getVisualizer(), character.getCollisionBox());
 
 			playerController = new PlayerController(player, 2);
 		} catch (IOException e) {

@@ -13,10 +13,10 @@ public class Field {
 	private String[] objects;
 
 	public final String PATH;
-	private final List<String[]> OBJECT_MODEL;
+	private final List<ObjectModel> OBJECT_MODEL;
 	private List<Obstacle> obstacles;
 
-	public Field(String path, List<String[]> objectModel) {
+	public Field(String path, List<ObjectModel> objectModel) {
 		PATH = path;
 		OBJECT_MODEL = objectModel;
 		CHUNKS = new List<>();
@@ -57,43 +57,33 @@ public class Field {
 
 			blueprintID = -1;
 			for (int j = 0; j < OBJECT_MODEL.length(); j++) {
-				for (int k = 0; k < OBJECT_MODEL.get(j).length; k++) {
-					if (OBJECT_MODEL.get(j)[k].split(":")[0].equals("name")) {
-						if (OBJECT_MODEL.get(j)[k].split(":")[1].equals(objectName)) {
-							blueprintID = j;
-							break;
-						}
-						continue;
-					}
+				if (OBJECT_MODEL.get(j).NAME.equals(objectName)) {
+					blueprintID = j;
+					break;
 				}
 			}
 			if (blueprintID == -1) {
 				System.err.println("There is no object named '" + objectName + "'.");
 				continue;
 			}
-			
-			for (int j = 0; j < OBJECT_MODEL.get(blueprintID).length; j++) {
-				if (OBJECT_MODEL.get(blueprintID)[j].split(":")[0].equals("type")) {
-					if (OBJECT_MODEL.get(blueprintID)[j].split(":")[1].equals("obstacle")) {
-						try {
-							obstacles.add(ObstacleCreator.createObstacle(connectArrays(blueprintID, objectParameters)));
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					break;
+
+			if (OBJECT_MODEL.get(blueprintID).TYPE.equals("obstacle")) {
+				try {
+					obstacles.add(ObstacleCreator.createObstacle(connectArrays(blueprintID, objectParameters)));
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
 	}
-	
+
 	private String[] connectArrays(int blueprintID, String[] objectParameters) {
 		String allObjectParameters = "";
-		for (int i = 0; i < OBJECT_MODEL.get(blueprintID).length; i++) {
-			if (OBJECT_MODEL.get(blueprintID)[i].split(":")[0].equals("name") || OBJECT_MODEL.get(blueprintID)[i].split(":")[0].equals("type") || OBJECT_MODEL.get(blueprintID)[i].split(":")[1].equals("none")) {
+		for (int i = 0; i < OBJECT_MODEL.get(blueprintID).PARAMETERS.length; i++) {
+			if (OBJECT_MODEL.get(blueprintID).PARAMETERS[i].split(":")[1].equals("none")) {
 				continue;
 			}
-			allObjectParameters += OBJECT_MODEL.get(blueprintID)[i] + "qwertzuiop";
+			allObjectParameters += OBJECT_MODEL.get(blueprintID).PARAMETERS[i] + "qwertzuiop";
 		}
 		for (int i = 0; i < objectParameters.length; i++) {
 			allObjectParameters += objectParameters[i] + "qwertzuiop";
@@ -101,7 +91,7 @@ public class Field {
 		allObjectParameters = allObjectParameters.replace("fWidth", "" + WIDTH).replace("fHeight", "" + HEIGHT);
 		return allObjectParameters.split("qwertzuiop");
 	}
-	
+
 	public List<Obstacle> getObstacles() {
 		return obstacles;
 	}

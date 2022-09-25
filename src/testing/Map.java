@@ -11,12 +11,10 @@ public class Map {
 	private final List<Field> FIELDS;
 	private int currentFieldIdx;
 	
-	private final List<String[]> OBJECT_MODEL;
+	private final List<ObjectModel> OBJECT_MODEL;
 
-	public Map() {
-		BlueprintReader reader = new BlueprintReader("assets/map/objects");
-		OBJECT_MODEL = reader.read();
-		
+	public Map(List<ObjectModel> objectModel) {
+		OBJECT_MODEL = objectModel;
 		FIELDS = new List<>();
 		File[] mapFolder = new File("assets/map").listFiles();
 		for (int i = 0; i < mapFolder.length; i++) {

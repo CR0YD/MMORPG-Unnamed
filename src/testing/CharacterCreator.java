@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class CharacterCreator {
@@ -23,7 +22,7 @@ public class CharacterCreator {
 
 	private static String collisionBoxMeasures, spritePath, scale, animation;
 
-	public static Character createObstacle(String[] parameters) throws IOException {
+	public static Character createCharactr(String[] parameters) throws IOException {
 		resetAttributes();
 		for (int i = 0; i < parameters.length; i++) {
 			switch (parameters[i].split(":")[0]) {
@@ -120,7 +119,6 @@ public class CharacterCreator {
 				collisionBox.setHeight(imageView.getViewport().getHeight() * scalingFactor);
 			}
 		}
-		System.out.println(collisionBox);
 	}
 
 	private static void processVisualization() {
