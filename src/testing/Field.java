@@ -79,8 +79,8 @@ public class Field {
 
 	private String[] connectArrays(int blueprintID, String[] objectParameters) {
 		String allObjectParameters = "";
-		for (int i = 0; i < OBJECT_MODEL.get(blueprintID).PARAMETERS.length; i++) {
-			if (OBJECT_MODEL.get(blueprintID).PARAMETERS[i].split(":")[1].equals("none")) {
+		for (int i = 0; i < OBJECT_MODEL.get(blueprintID).PARAMETERS.length && !OBJECT_MODEL.get(blueprintID).PARAMETERS[0].equals(""); i++) {
+			if (OBJECT_MODEL.get(blueprintID).PARAMETERS[i].substring(OBJECT_MODEL.get(blueprintID).PARAMETERS[i].indexOf("++") + 2).equals("none")) {
 				continue;
 			}
 			allObjectParameters += OBJECT_MODEL.get(blueprintID).PARAMETERS[i] + "qwertzuiop";

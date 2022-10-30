@@ -87,13 +87,16 @@ public class List<Type> {
 	}
 
 	public void remove(int idx) {
-		if (idx > length - 1) {
+		if (idx > length - 1 || length == 0) {
 			return;
 		}
 		if (idx == 0) {
 			first = first.getNext();
-			first.setPrevious(null);
 			length--;
+			if (first == null) {
+				return;
+			}
+			first.setPrevious(null);
 			return;
 		}
 		Element current = first;

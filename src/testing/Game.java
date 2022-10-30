@@ -1,6 +1,9 @@
 package testing;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 import finished.List;
 import javafx.event.EventHandler;
@@ -13,14 +16,13 @@ import javafx.stage.Stage;
 public class Game {
 
 	private Player player;
-	private PlayerController playerController;
 
 	private Stage stage;
 	private Scene scene;
 	private Group root;
 
 	private List<ObjectModel> objectModels;
-	
+
 	@SuppressWarnings("unused")
 	private long prevTime;
 	@SuppressWarnings("unused")
@@ -30,11 +32,15 @@ public class Game {
 
 	private Map map;
 
+	private String[] controlls;
+	private boolean[] controllsPressed;
+
 	public Game(Stage stage, Scene scene, Group root) {
 		this.stage = stage;
 		this.scene = scene;
 		this.root = root;
-		
+
+		initControlls();
 		objectModels = ObjectFilesReader.read("assets/map/objects");
 
 		map = new Map(objectModels);
@@ -42,7 +48,11 @@ public class Game {
 
 		initPlayer();
 		initEventHandler();
+		// this.root.getChildren().add(player.getCollisionBox());
 		this.root.getChildren().add(player.getVisualizer().getImageView());
+		// this.root.getChildren().add(new Rectangle(player.getX() +
+		// player.getCenterPoint().getX(), player.getY() +
+		// player.getCenterPoint().getY(), 10, 10));
 	}
 
 	public void tick(Group root) {
@@ -56,30 +66,19 @@ public class Game {
 //		}
 		// when window focus is lost, no input shall be proceeded
 		if (!stage.isFocused()) {
-			playerController.setAllPlayerInputs(false);
-		}
-		// player movement every frame
-		if (frameCounter % 1 == 0) {
-			playerController.checkCollisionWithObstacle(map.getCurrentField().getObstacles());
-			playerController.checkPlayerAnimation();
-			playerController.updatePlayerPosition(map, scene, root);
-			playerController.checkPlayerStoppedMoving();
-		}
-		// basic animation: every tenth frame, move frame by one
-		if (frameCounter % 10 == 0) {
-			player.getVisualizer().nextAnimationFrame();
-			for (int i = 0; i < map.getCurrentField().getObstacles().length(); i++) {
-				if (!map.getCurrentField().getObstacles().get(i).hasAnimation()) {
-					continue;
-				}
-				map.getCurrentField().getObstacles().get(i).getVisualizer().nextAnimationFrame();
+			for (int i = 0; i < controlls.length; i++) {
+				controllsPressed[i] = false;
 			}
 		}
-		// incrementing frameCounter
-		frameCounter++;
-		if (frameCounter < 0) {
-			frameCounter = 0;
+		player.tick(controlls, controllsPressed, map.getCurrentField().getObstacles(), map, scene, root);
+		for (int i = 0; i < map.getCurrentField().getObstacles().length(); i++) {
+			map.getCurrentField().getObstacles().get(i).tick();
 		}
+		// incrementing frameCounter
+//		frameCounter++;
+//		if (frameCounter < 0) {
+//			frameCounter = 0;
+//		}
 	}
 
 	private void initEventHandler() {
@@ -87,20 +86,14 @@ public class Game {
 
 			@Override
 			public void handle(KeyEvent event) {
-				if (event.getText().equalsIgnoreCase("w")) {
-					playerController.setPlayerInputUp(true);
-				}
-				if (event.getText().equalsIgnoreCase("s")) {
-					playerController.setPlayerInputDown(true);
-				}
-				if (event.getText().equalsIgnoreCase("a")) {
-					playerController.setPlayerInputLeft(true);
-				}
-				if (event.getText().equalsIgnoreCase("d")) {
-					playerController.setPlayerInputRight(true);
-				}
 				if (event.getCode() == KeyCode.ESCAPE) {
 					endGame();
+				}
+				for (int i = 0; i < controlls.length; i++) {
+					if (event.getText().equalsIgnoreCase(controlls[i].split("->")[0])) {
+						controllsPressed[i] = true;
+						return;
+					}
 				}
 			}
 		});
@@ -108,20 +101,11 @@ public class Game {
 
 			@Override
 			public void handle(KeyEvent event) {
-				if (event.getText().equalsIgnoreCase("w")) {
-					playerController.setPlayerInputUp(false);
-				}
-				if (event.getText().equalsIgnoreCase("s")) {
-					playerController.setPlayerInputDown(false);
-				}
-				if (event.getText().equalsIgnoreCase("a")) {
-					playerController.setPlayerInputLeft(false);
-				}
-				if (event.getText().equalsIgnoreCase("d")) {
-					playerController.setPlayerInputRight(false);
-				}
-				if (event.getText().equalsIgnoreCase("f")) {
-					playerController.playerWantsToInteract();
+				for (int i = 0; i < controlls.length; i++) {
+					if (event.getText().equalsIgnoreCase(controlls[i].split("->")[0])) {
+						controllsPressed[i] = false;
+						return;
+					}
 				}
 			}
 		});
@@ -131,19 +115,38 @@ public class Game {
 		System.exit(0);
 	}
 
+	private void initControlls() {
+		String controllsString = "";
+		Scanner scan;
+		try {
+			scan = new Scanner(new File("assets/controlls.config"));
+			while (scan.hasNextLine()) {
+				controllsString += scan.nextLine() + ";";
+			}
+			scan.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		controlls = controllsString.split(";");
+		controllsPressed = new boolean[controlls.length];
+		for (int i = 0; i < controlls.length; i++) {
+			controllsPressed[i] = false;
+		}
+	}
+
 	private void initPlayer() {
 		try {
 			Character character = null;
 			for (int i = 0; i < objectModels.length(); i++) {
 				if (objectModels.get(i).TYPE.equals("character")) {
 					character = CharacterCreator.createCharactr(objectModels.get(i).PARAMETERS);
+					break;
 				}
 			}
 
-			player = new Player((int) ((stage.getWidth() - 32) / 2), (int) ((stage.getHeight() - 36) / 2),
-					character.getVisualizer(), character.getCollisionBox());
-
-			playerController = new PlayerController(player, 2);
+			player = new Player((int) (stage.getWidth() / 2), (int) (stage.getHeight() / 2), character.getVisualizer(),
+					character.getCollisionBox(), character.getCenterPoint());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,17 +20,19 @@ public class CharacterCreator {
 	private static ImageView imageView;
 	private static Rectangle collisionBox;
 	private static Visualizer visualizer;
+	private static Point2D centerPoint;
 
-	private static String collisionBoxMeasures, spritePath, scale, animation;
+	private static String collisionBoxMeasures, spritePath, scale, animation, center;
 
 	public static Character createCharactr(String[] parameters) throws IOException {
 		resetAttributes();
 		for (int i = 0; i < parameters.length; i++) {
-			switch (parameters[i].split(":")[0]) {
-			case "collisionBox" -> collisionBoxMeasures = parameters[i].split(":")[1];
-			case "sprite" -> spritePath = parameters[i].split(":")[1];
-			case "scale" -> scale = parameters[i].split(":")[1];
-			case "animation" -> animation = parameters[i].substring(parameters[i].indexOf(":") + 1);
+			switch (parameters[i].substring(0, parameters[i].indexOf("++"))) {
+			case "collisionBox" -> collisionBoxMeasures = parameters[i].substring(parameters[i].indexOf("++") + 2);
+			case "sprite" -> spritePath = parameters[i].substring(parameters[i].indexOf("++") + 2);
+			case "scale" -> scale = parameters[i].substring(parameters[i].indexOf("++") + 2);
+			case "animation" -> animation = parameters[i].substring(parameters[i].indexOf("++") + 2);
+			case "center" -> center = parameters[i].substring(parameters[i].indexOf("++") + 2);
 			default -> {
 			}
 			}
@@ -37,17 +40,21 @@ public class CharacterCreator {
 		processSprite();
 		processVisualization();
 		processHitboxValues();
-		return new Character(visualizer, collisionBox);
+		processCenter();
+		return new Character(visualizer, collisionBox, centerPoint);
 	}
 
 	private static void resetAttributes() {
-		collisionBox = null;
-		imageView = null;
 		sprite = null;
+		imageView = null;
+		collisionBox = null;
+		visualizer = null;
+		centerPoint = null;
 		collisionBoxMeasures = "";
 		spritePath = "";
 		scale = "";
 		animation = "";
+		center = "";
 	}
 
 	private static void processSprite() throws IOException {
@@ -145,15 +152,29 @@ public class CharacterCreator {
 		String[] animationArr;
 		for (int i = 1; i < animationParameterArr.length; i++) {
 			animationName = animationParameterArr[i].substring(0, animationParameterArr[i].indexOf("("));
-			visualizer.addAnimation(animationName);
+			visualizer.addAnimation(animationName, Integer.parseInt(animationParameterArr[i].substring(animationParameterArr[i].indexOf(")") + 2, animationParameterArr[i].length())));
 			animationArr = animationParameterArr[i]
-					.substring(animationParameterArr[i].indexOf("(") + 1, animationParameterArr[i].length() - 1)
+					.substring(animationParameterArr[i].indexOf("(") + 1, animationParameterArr[i].indexOf(")"))
 					.split(",");
 			for (int j = 0; j < animationArr.length; j++) {
 				visualizer.addFrameToAnimation(animationName, Integer.parseInt(animationArr[j].split("-")[0]),
 						Integer.parseInt(animationArr[j].split("-")[1]));
 			}
 		}
+	}
+
+	private static void processCenter() {
+		double scalingFactor = 1;
+		if (!scale.equals("")) {
+			scalingFactor = Double.parseDouble(scale);
+		}
+		if (center.equals("")) {
+			centerPoint = new Point2D((visualizer.getFrameWidth() * scalingFactor) / 2,
+					(visualizer.getFrameHeight() * scalingFactor) / 2);
+			return;
+		}
+		centerPoint = new Point2D(Double.parseDouble(center.split(",")[0]) * scalingFactor,
+				Double.parseDouble(center.split(",")[0]) * scalingFactor);
 	}
 
 }

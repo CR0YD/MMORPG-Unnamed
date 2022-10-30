@@ -25,16 +25,16 @@ public class ObstacleCreator {
 	public static Obstacle createObstacle(String[] parameters) throws IOException {
 		resetAttributes();
 		for (int i = 0; i < parameters.length; i++) {
-			switch (parameters[i].split(":")[0]) {
+			switch (parameters[i].contains("++") ? parameters[i].substring(0, parameters[i].indexOf("++")) : parameters[i].split(":")[0]) {
 			case "x" -> x = parameters[i].split(":")[1];
 			case "y" -> y = parameters[i].split(":")[1];
 			case "cX" -> cX = parameters[i].split(":")[1];
 			case "cY" -> cY = parameters[i].split(":")[1];
 			case "cW" -> cW = parameters[i].split(":")[1];
 			case "cH" -> cH = parameters[i].split(":")[1];
-			case "sprite" -> spritePath = parameters[i].split(":")[1];
+			case "sprite" -> spritePath = parameters[i].substring(parameters[i].indexOf("++") + 2);
 			case "scale" -> scale = parameters[i].split(":")[1];
-			case "animation" -> animation = parameters[i].substring(parameters[i].indexOf(":") + 1);
+			case "animation" -> animation = parameters[i].substring(parameters[i].indexOf("++") + 2);
 			default -> {
 			}
 			}
@@ -159,9 +159,9 @@ public class ObstacleCreator {
 		String[] animationArr;
 		for (int i = 1; i < animationParameterArr.length; i++) {
 			animationName = animationParameterArr[i].substring(0, animationParameterArr[i].indexOf("("));
-			visualizer.addAnimation(animationName);
+			visualizer.addAnimation(animationName, Integer.parseInt(animationParameterArr[i].substring(animationParameterArr[i].indexOf(")") + 2, animationParameterArr[i].length())));
 			animationArr = animationParameterArr[i]
-					.substring(animationParameterArr[i].indexOf("(") + 1, animationParameterArr[i].length() - 1)
+					.substring(animationParameterArr[i].indexOf("(") + 1, animationParameterArr[i].indexOf(")"))
 					.split(",");
 			for (int j = 0; j < animationArr.length; j++) {
 				visualizer.addFrameToAnimation(animationName,

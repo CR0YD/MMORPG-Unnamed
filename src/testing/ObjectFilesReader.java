@@ -8,41 +8,72 @@ import finished.List;
 public class ObjectFilesReader {
 
 	public static List<ObjectModel> read(String path) {
-		File[] characterFiles = new File(path).listFiles();
+		File[] objectFiles = new File(path).listFiles();
 		Scanner scan;
 		List<ObjectModel> objectModel = new List<>();
 		String objectModelString = "";
 		String objectModelType = "";
 		String objectModelName = "";
-		for (int i = 0; i < characterFiles.length; i++) {
-			if (characterFiles[i].getName().endsWith(".png") || characterFiles[i].getName().endsWith(".jpg")) {
+		boolean hasSprite = true;
+		for (int i = 0; i < objectFiles.length; i++) {
+			hasSprite = true;
+			if (objectFiles[i].getName().endsWith(".png") || objectFiles[i].getName().endsWith(".jpg") || objectFiles[i].getName().endsWith(".config")) {
 				continue;
 			}
 			try {
 				objectModelString = "";
-				objectModelName = characterFiles[i].getName().substring(0, characterFiles[i].getName().indexOf("."));
-				objectModelType = characterFiles[i].getName().substring(characterFiles[i].getName().indexOf(".") + 1,
-						characterFiles[i].getName().length());
-				scan = new Scanner(characterFiles[i]);
+				objectModelName = objectFiles[i].getName().substring(0, objectFiles[i].getName().indexOf("."));
+				objectModelType = objectFiles[i].getName().substring(objectFiles[i].getName().indexOf(".") + 1,
+						objectFiles[i].getName().length());
+				scan = new Scanner(objectFiles[i]);
 				String processingString;
 				while (scan.hasNextLine()) {
 					processingString = scan.nextLine().trim().replace(" ", "");
-					if (processingString.split(":")[0].equals("sprite")
-							&& !processingString.split(":")[1].equals("none")) {
-						processingString = "sprite:" + path + "/" + processingString.split(":")[1];
+					if (processingString.startsWith("++")) {
+						while (scan.hasNextLine()) {
+							if (processingString.equals("++sprite++")) {
+								if (scan.hasNextLine()) {
+									processingString = scan.nextLine().trim().replace(" ", "");
+									if (processingString.equals("none")) {
+										hasSprite = false;
+										continue;
+									}
+									processingString = "sprite++" + path + "/" + processingString;
+									objectModelString += processingString;
+									if (scan.hasNextLine()) {
+										processingString = scan.nextLine().trim().replace(" ", "");
+										while (!processingString.startsWith("++") && scan.hasNextLine()) {
+											objectModelString += processingString;
+											processingString = scan.nextLine().trim().replace(" ", "");
+										}
+									}
+								}
+								objectModelString += "qwertzuiop";
+								continue;
+							}
+							objectModelString += processingString.substring(2);
+							processingString = scan.nextLine().trim().replace(" ", "");
+							while (!processingString.startsWith("++")) {
+								objectModelString += processingString;
+								if (!scan.hasNextLine()) {
+									break;
+								}
+								processingString = scan.nextLine().trim().replace(" ", "");
+							}
+							objectModelString += "qwertzuiop";
+						}
 					}
-					objectModelString += processingString + "qwertzuiop";
 				}
-				if (!objectModelString.contains("sprite")) {
-					objectModelString += "sprite:" + path + "/"
-							+ characterFiles[i].getName().substring(0, characterFiles[i].getName().indexOf("."))
+				if (!objectModelString.contains("sprite") && hasSprite) {
+					objectModelString += "sprite++" + path + "/"
+							+ objectFiles[i].getName().substring(0, objectFiles[i].getName().indexOf("."))
 							+ ".png";
 				}
 				objectModel.add(new ObjectModel(objectModelName, objectModelType, objectModelString.split("qwertzuiop")));
 				scan.close();
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.err.println(characterFiles[i].getName() + " is not readable!");
+				System.err.println(objectFiles[i].getName() + " is not readable!");
 				continue;
 			}
 		}

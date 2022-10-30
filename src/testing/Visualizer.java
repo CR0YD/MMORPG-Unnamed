@@ -9,6 +9,7 @@ public class Visualizer {
 	private ImageView imageView;
 	private List<List<Rectangle2D>> animations;
 	private List<String> animationName;
+	private List<Integer> frameSpeed;
 	private int currentAnimationFrame, currentAnimationID;
 	private double spriteColumnWidth, spriteRowHeight;
 	private boolean isAnimated;
@@ -19,6 +20,7 @@ public class Visualizer {
 		this.spriteRowHeight = spriteRowHeight;
 		animations = new List<>();
 		animationName = new List<>();
+		frameSpeed = new List<>();
 		isAnimated = false;
 		setImageTo(0, 0);
 	}
@@ -28,7 +30,7 @@ public class Visualizer {
 				spriteRowHeight));
 	}
 
-	public void addAnimation(String name) {
+	public void addAnimation(String name, int speed) {
 		if (!isAnimated) {
 			isAnimated = true;
 		}
@@ -37,6 +39,7 @@ public class Visualizer {
 		}
 		animationName.add(name);
 		animations.add(new List<Rectangle2D>());
+		frameSpeed.add(speed);
 	}
 	
 	public void addFrameToAnimation(String name, int column, int row) {
@@ -49,12 +52,13 @@ public class Visualizer {
 		}
 	}
 
-	public void addAnimation(String name, List<Rectangle2D> frames) {
+	public void addAnimation(String name, List<Rectangle2D> frames, int speed) {
 		if (animationName.contains(name)) {
 			return;
 		}
 		animationName.add(name);
 		animations.add(frames);
+		frameSpeed.add(speed);
 	}
 
 	public void addFramesToAnimation(String name, List<Rectangle2D> frames) {
@@ -95,12 +99,24 @@ public class Visualizer {
 		return currentAnimationFrame;
 	}
 	
+	public int getCurrentFrameSpeed() {
+		return frameSpeed.get(currentAnimationID);
+	}
+	
 	public boolean isAnimated() {
 		return isAnimated;
 	}
 	
 	public ImageView getImageView() {
 		return imageView;
+	}
+	
+	public double getFrameWidth() {
+		return spriteColumnWidth;
+	}
+	
+	public double getFrameHeight() {
+		return spriteRowHeight;
 	}
 
 }

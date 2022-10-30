@@ -7,6 +7,7 @@ public class Obstacle {
 	private Rectangle collisionBox;
 	private double collisionOffsetX, collisionOffsetY;
 	private Visualizer visualizer;
+	private int frameAnimationCounter = 0;
 	
 	public Obstacle(Visualizer visualizer, Rectangle collisionBox) {
 		this.collisionBox = collisionBox;
@@ -39,6 +40,22 @@ public class Obstacle {
 	
 	public boolean hasAnimation() {
 		return visualizer.isAnimated();
+	}
+	
+	public void tick() {
+//		1. animation
+		animation();
+	}
+	
+	private void animation() {
+		if (!visualizer.isAnimated()) {
+			return;
+		}
+		frameAnimationCounter++;
+		if (frameAnimationCounter - visualizer.getCurrentFrameSpeed() == 0) {
+			visualizer.nextAnimationFrame();
+			frameAnimationCounter = 0;
+		}
 	}
 
 }
