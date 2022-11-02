@@ -13,7 +13,8 @@ public class Player {
 	private Point2D centerPoint;
 	private double hitboxOffsetX, hitboxOffsetY;
 	private final int PLAYER_SPEED = 4;
-	private int frameAnimationCounter = 0;
+	private int frameAnimationCounter;
+	private boolean changedYPosition;
 
 	public Player(double x, double y, Visualizer visualizer, Rectangle collisionbox, Point2D centerPoint) {
 		this.visualizer = visualizer;
@@ -21,6 +22,8 @@ public class Player {
 		this.centerPoint = centerPoint;
 		hitboxOffsetX = collisionbox.getTranslateX();
 		hitboxOffsetY = collisionbox.getTranslateY();
+		frameAnimationCounter = 0;
+		changedYPosition = false;
 		moveFromCenterTo(x, y);
 	}
 
@@ -95,6 +98,7 @@ public class Player {
 		}
 //		0. ??
 //		1. movement
+		changedYPosition = false;
 		hasMoved = movement(up, down, left, right, obstacles, map, scene, root);
 //		2. animation
 		animation(up, down, left, right, hasMoved);
@@ -327,6 +331,7 @@ public class Player {
 		if (up && !down && left && !right) {
 			move((int) (-Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) - 1),
 					(int) (-Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) - 1));
+			changedYPosition = true;
 			if (0 > root.getTranslateX()
 					&& getX() + centerPoint.getX() < map.getCurrentField().WIDTH - scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) + 1));
@@ -346,6 +351,7 @@ public class Player {
 		if (up && !down && right && !left) {
 			move((int) (Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) + 1),
 					(int) (-Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) - 1));
+			changedYPosition = true;
 			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX()
 					&& getX() + centerPoint.getX() > scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (-Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) - 1));
@@ -365,6 +371,7 @@ public class Player {
 		if (down && !up && left && !right) {
 			move((int) (-Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) - 1),
 					(int) (Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) + 1));
+			changedYPosition = true;
 			if (0 > root.getTranslateX()
 					&& getX() + centerPoint.getX() < map.getCurrentField().WIDTH - scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) + 1));
@@ -384,6 +391,7 @@ public class Player {
 		if (down && !up && right && !left) {
 			move((int) (Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) + 1),
 					(int) (Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) + 1));
+			changedYPosition = true;
 			if (map.getCurrentField().WIDTH - scene.getWidth() > -root.getTranslateX()
 					&& getX() + centerPoint.getX() > scene.getWidth() / 2) {
 				root.setTranslateX(root.getTranslateX() + (int) (-Math.sqrt(Math.pow(PLAYER_SPEED, 2) / 2) - 1));
@@ -402,6 +410,7 @@ public class Player {
 		}
 		if (up && !down && (left || right || (!(left || right) || (left && right)))) {
 			move(0, -PLAYER_SPEED);
+			changedYPosition = true;
 			if (0 > root.getTranslateY()
 					&& getY() + centerPoint.getY() < map.getCurrentField().HEIGHT - scene.getHeight() / 2) {
 				root.setTranslateY(root.getTranslateY() + PLAYER_SPEED);
@@ -413,6 +422,7 @@ public class Player {
 		}
 		if (down && !up && (left || right || (!(left || right) || (left && right)))) {
 			move(0, PLAYER_SPEED);
+			changedYPosition = true;
 			if (map.getCurrentField().HEIGHT - scene.getHeight() > -root.getTranslateY()
 					&& getY() + centerPoint.getY() > scene.getHeight() / 2) {
 				root.setTranslateY(root.getTranslateY() - PLAYER_SPEED);
@@ -445,6 +455,10 @@ public class Player {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean changedYPosition() {
+		return changedYPosition;
 	}
 
 }

@@ -24,7 +24,7 @@ public class CharacterCreator {
 
 	private static String collisionBoxMeasures, spritePath, scale, animation, center;
 
-	public static Character createCharactr(String[] parameters) throws IOException {
+	public static Character createCharacter(String[] parameters) throws IOException {
 		resetAttributes();
 		for (int i = 0; i < parameters.length; i++) {
 			switch (parameters[i].substring(0, parameters[i].indexOf("++"))) {

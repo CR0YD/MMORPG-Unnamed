@@ -25,7 +25,7 @@ public class Client extends Application {
 		stage = primaryStage;
 		stage.setTitle("MMORPG - unnamed"); // Set the stage title
 		stage.setScene(scene); // Placing the scene in the stage
-		stage.setFullScreen(false);
+		stage.setFullScreen(true);
 		stage.setResizable(false);
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		stage.show();
